@@ -1,0 +1,27 @@
+{
+  "name": "oc-7-les-petis-plats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css:build": "sass --load-path=node_modules styles/bootstrap-lite.scss public/bootstrap.css --style=compressed",
+    "css:watch": "sass --load-path=node_modules --watch styles/bootstrap-lite.scss public/bootstrap.css --style=compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Delia-1/OC-7-Les-petis-plats.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Delia-1/OC-7-Les-petis-plats/issues"
+  },
+  "homepage": "https://github.com/Delia-1/OC-7-Les-petis-plats#readme",
+  "devDependencies": {
+    "bootstrap": "^5.3.8",
+    "sass": "^1.93.0"
+  }
+}
