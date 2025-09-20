@@ -4,13 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="public/bootstrap.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <title>Les petits plats</title>
 </head>
 <body>
-  <header >
+  <header class="d-flex flex-column pt-1 pb-5" m-1>
     <a href="index.html" aria-label="Retourner à la page d'accueil">
       <img class="p-5" src="assets/logo.svg" alt="logo Les petits plats ">
     </a>
+    <div class="content d-flex flex-column align-items-center">
+      <h1 class="lh-base header--title text-yellow-default">CHERCHEZ PARMI PLUS DE 1500 RECETTES<br>DU QUOTIDIEN,SIMPLES ET DÉLICIEUSES</h1>
+      <form>
+        <div class="search-bar d-flex">
+          <label for="contenu-recherche"></label>
+          <input id="contenu-recherche" class="search-bar--input" type="text">
+          <button aria-label="Rechercher" class="search-bar--btn">
+            <img src="assets/Group 4.svg" alt="icon loupe">
+          </button>
+        </div>
+      </form>
+    </div>
   </header>
   <main>
     <!-- recette injectées via js -->
