@@ -1,4 +1,28 @@
+import getRecipes from "../utils/getRecipies.js"
 import { ElementFactory } from "../factory/elementsFactory.js";
+import { openFilter } from "./filterTemplate.js";
+
+
+
+export const displayMain = async () => {
+
+  const main = document.createElement("main");
+  main.classList.add("z-2")
+  const data = await getRecipes()
+
+    data.forEach(recipe => {
+    const card = cardTemplate(recipe)
+    main.appendChild(card)
+  });
+
+openFilter()
+return main
+}
+
+
+
+
+
 
 export const ingredientsTemplate = (recipe) => {
   return recipe.ingredients.map((currentIngredient) => {

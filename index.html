@@ -1,43 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="public/bootstrap.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="public/bootstrap.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
   <title>Les petits plats</title>
 </head>
-<body>
+
 <body class="bg-light-grey">
-  <header class="position-relative d-flex flex-column justify-content-center align-items-center">
-    <a class="position-absolute top-0 start-0 ps-4 m-5" href="index.html" aria-label="Retourner à la page d'accueil">
-      <img  src="assets/logo.svg" alt="logo Les petits plats ">
-    </a>
-    <div class="content d-flex flex-column align-items-center my-auto">
-      <h1 class="lh-base header--title text-yellow text-center mt-4 pt-5">CHERCHEZ PARMI PLUS DE 1500 RECETTES<br>DU QUOTIDIEN,SIMPLES ET DÉLICIEUSES</h1>
-      <form class="mt-3">
-        <div class="search-bar d-flex flex-row-reverse bg-light">
-          <button aria-label="Rechercher" class="search-bar--btn bg-dark">
-            <img src="assets/loupe-icon.svg" alt="icon loupe">
-          </button>
-          <button aria-label="Supprimer recherche" class="search-bar--cancel bg-light">
-            <img src="assets/cross-icon.svg" alt="icon fermer">
-          </button>
-          <label for="contenu-recherche"></label>
-          <input id="contenu-recherche" class="search-bar--input bg-light" type="text" placeholder="Rechercher une recette, un ingrédient, ...">
-        </div>
-      </form>
-    </div>-
-  </header>
-  <section class="search-aside d-flex z-3 position-absolute"></section>
-  <main class="z-2 position-absolute">
-    <!-- recette injectées via js -->
-  </main>
- <script src="scripts/recipes.js"></script>
- <script type="module" src="scripts/templates/cardsTemplate.js"></script>
- <script type="module" src="scripts/utils/getRecipies.js"></script>
- <script type="module" src="scripts/pages/homepage.js"></script>
+  <script src="scripts/recipes.js"></script>
+  <script type="module" src="scripts/templates/cardsTemplate.js"></script>
+  <script type="module" src="scripts/utils/getRecipies.js"></script>
+  <script type="module" src="scripts/pages/homepage.js"></script>
 </body>
+
 </html>

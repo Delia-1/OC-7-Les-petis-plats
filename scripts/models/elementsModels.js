@@ -13,6 +13,16 @@ export class ArticleElement {
       this.el.setAttribute("aria-label", options.ariaLabel);
   }
 }
+export class HeaderElement {
+  constructor(options = {}) {
+    this.el = document.createElement("header");
+    this.el.className = options.className || "";
+    if (options.tabindex)
+      this.el.setAttribute("tabindex", options.tabindex || "");
+    if (options.ariaLabel)
+      this.el.setAttribute("aria-label", options.ariaLabel);
+  }
+}
 
 export class DivElement {
   constructor(options = {}) {
@@ -89,6 +99,13 @@ export class VideoElement {
     this.el.src = options.src || "";
     this.el.controls = options.controls || false;
   }
+}
+
+export class FormElement {
+  constructor(options = {}) {
+    this.el = document.createElement("form");
+    this.el.className = options.className || "";
+}
 }
 
 export class LabelElement {

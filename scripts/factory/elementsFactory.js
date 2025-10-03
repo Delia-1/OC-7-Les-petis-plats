@@ -1,5 +1,6 @@
 import {
   ArticleElement,
+  HeaderElement,
   DivElement,
   SectionElement,
   HeadingElement,
@@ -7,6 +8,7 @@ import {
   TextareaElement,
   ImageElement,
   VideoElement,
+  FormElement,
   LabelElement,
   LinkElement,
   ButtonElement,
@@ -24,6 +26,8 @@ export class ElementFactory {
     switch (elementType) {
       case "article":
         return new ArticleElement(options);
+       case "header":
+        return new HeaderElement(options);
       case "div":
         return new DivElement(options);
       case "section":
@@ -40,6 +44,8 @@ export class ElementFactory {
         return new ImageElement(options);
       case "video":
         return new VideoElement(options);
+      case "form":
+        return new FormElement(options);
       case 'label':
         return new LabelElement(options);
       case "a":
