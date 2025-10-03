@@ -20,7 +20,7 @@ header {
   background-image: url("../assets/bg-header.webp");
   background-size: cover;
   background-position: center;
-  margin-bottom: 131px;
+  // margin-bottom: 131px;
 }
 
 //  yellow-primary: #FFD15B
@@ -55,10 +55,34 @@ header {
   }
 }
 
+.div-filter {
+  width: fit-content;
+  height: 60px;
+  border-radius: 11px;
+}
+
+.filter-header {
+  width: 195px;
+  height: 56px;
+}
+
+.filterName {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.item-list {
+  list-style: none;
+}
+
+.open {
+  height: 200px;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: 0 6vw 0 6vw;
+  padding: 14vh 6vw 0 6vw;
   grid-gap: 7vh 1vw;
   place-items: center;
 }

@@ -13,6 +13,7 @@ import {
   AsideElement,
   SpanElement,
   BrElement,
+  InputElement,
   ListElement,
   ItemElement,
 } from '../models/elementsModels.js';
@@ -49,6 +50,8 @@ export class ElementFactory {
         return new ListElement(options);
       case "li":
         return new ItemElement(options);
+      case "input":
+        return new InputElement(options);
       case "aside":
         return new AsideElement(options)
       case "span":

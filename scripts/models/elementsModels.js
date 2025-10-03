@@ -33,6 +33,8 @@ export class DivElement {
       );
     if (options.ariaSelected)
       this.el.setAttribute("aria-selected", options.ariaSelected);
+    if (options.dataKey)
+        this.el.setAttribute("data-key", options.dataKey);
   }
 }
 
@@ -151,6 +153,19 @@ export class ListElement {
     this.el.className = options.className || "";
     this.el.textContent = options.text || "";
   }
+}
+
+export class InputElement {
+  constructor(options = {}) {
+    this.el = document.createElement("input");
+    this.el.className = options.className || "";
+    this.el.textContent = options.text || "";
+    if (options.ariaLabel)
+      this.el.setAttribute("aria-label", options.ariaLabel);
+    if (options.ariaAutoComplete)
+      this.el.setAttribute("aria-auto-ccomplete", options.ariaAutoComplete);
+  }
+
 }
 
 export class ItemElement {
