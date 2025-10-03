@@ -9,7 +9,6 @@ export const displayCards = async () => {
     const card = cardTemplate(recipe)
     recipesContainer.appendChild(card)
   });
-  const card = cardTemplate(data)
 
   // const card = cardTemplate(data[0])
 

@@ -1,7 +1,10 @@
 // 1) Bootstrap prereqs
 @import "bootstrap/scss/functions";
 
-$yellow-default: #FFD15B;
+$yellow: #FFD15B;
+$dark: #1B1B1B;
+$light-grey: #EDEDED;
+$grey: #7A7A7A;
 
 // 2) Tes overrides AVANT (couleurs, radius, breakpoints…)
 $body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
@@ -16,7 +19,10 @@ $body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue
 $theme-colors: map-merge(
   $theme-colors,
   (
-    "yellow-default": $yellow-default
+    "yellow": $yellow,
+    "dark": $dark,
+    "light-grey": $light-grey,
+    "grey": $grey
   )
 );
 
@@ -37,6 +43,7 @@ $theme-colors: map-merge(
 $utilities: map-merge($utilities, (
   "color": (property: color, class: text, values: $theme-colors),
   "background-color": (property: background-color, class: bg, values: $theme-colors),
+
 ));
 
 // 7) Utilities API (génère SEULEMENT ce que tu actives)

@@ -11,11 +11,11 @@ export const ingredientsTemplate = (recipe) => {
       :`${quantity}`;
     };
     const item = ElementFactory.create("li", {
-      className: "list--item",
+      className: "list--item text-dark",
       text: ingredient,
     });
     const itemDetails = ElementFactory.create("p", {
-      className: "list--details",
+      className: "list--details text-grey",
       text: formatText(),
     });
 
@@ -25,10 +25,10 @@ export const ingredientsTemplate = (recipe) => {
 };
 
 export const cardTemplate = (recipe) => {
-  const { name, description, image } = recipe;
+  const { name, description, image, time } = recipe;
 
   const card = ElementFactory.create("article", {
-    className: "recipe-card",
+    className: "recipe-card bg-light d-flex flex-wrap position-relative",
   });
   const imgWrapper = ElementFactory.create("div", {
     className: "img-wrapper",
@@ -40,32 +40,36 @@ export const cardTemplate = (recipe) => {
     alt: `photo of ${name}`,
   });
 
+  const timeTag = ElementFactory.create("div", {
+    className: "time-tag rounded-pill bg-yellow position-absolute text-dark d-flex align-items-center justify-content-center",
+    text: `${time}min`,
+  })
 
   const recipeContainer = ElementFactory.create("div", {
-    className: "recipe-container",
+    className: "recipe-container p-4 pb-2",
   });
 
 
-  const recipeTitle = ElementFactory.create("h1", {
-    className: "recipe-container--title",
+  const recipeTitle = ElementFactory.create("h2", {
+    className: "recipe-container--title text-dark py-2 m-0",
     text: name,
   });
-  const recetteSubtitle = ElementFactory.create("h3", {
-    className: "recipe-container--recette",
-    text: "Recette",
+  const recetteSubtitle = ElementFactory.create("p", {
+    className: "recipe-container--recette text-grey pt-4 m-0",
+    text: "RECETTE",
   });
 
   const instructions = ElementFactory.create("p", {
-    className: "recipe-container---description",
+    className: "recipe-container---description  my-3 text-dark",
     text: description,
   });
 
     const list = ElementFactory.create("ul", {
-    className: "list",
+    className: "list p-2 mb-5",
   });
-    const ingredientsSubtitle = ElementFactory.create("h3", {
-    className: "recipe-container--ingredients",
-    text: "Ingredients",
+    const ingredientsSubtitle = ElementFactory.create("p", {
+    className: "recipe-container--ingredients text-grey pt-3 m-0 ",
+    text: "INGREDIENTS",
   });
 
   ingredientsTemplate(recipe).forEach((elem) => {
@@ -73,6 +77,7 @@ export const cardTemplate = (recipe) => {
   });
 
   card.el.appendChild(imgWrapper.el);
+  card.el.appendChild(timeTag.el)
   imgWrapper.el.appendChild(recipeImage.el);
 
   card.el.appendChild(recipeContainer.el)

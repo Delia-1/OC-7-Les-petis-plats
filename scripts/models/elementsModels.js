@@ -18,6 +18,7 @@ export class DivElement {
   constructor(options = {}) {
     this.el = document.createElement("div");
     this.el.className = options.className || "";
+        this.el.textContent = options.text || "";
     if (options.id) this.el.id = options.id;
     if (options.ariaLabel)
       this.el.setAttribute("aria-label", options.ariaLabel);

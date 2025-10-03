@@ -1,24 +1,31 @@
 :root {
   --font-title: "Anton";
-  --font-input: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+  --font-text: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
     sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-title);
+}
+P, li, input, div {
+  font-family: var(--font-text);
 }
 
 .bg-header {
   object-fit: cover;
 }
 header {
-  min-height: 50vh;
-  max-height: 65vh;
+  // min-height: 50vh;
+  height: 667px;
   background-image: url("../assets/bg-header.webp");
   background-size: cover;
   background-position: center;
+  margin-bottom: 131px;
 }
 
 //  yellow-primary: #FFD15B
 
 .header--title {
-  font-family: var(--font-title);
   font-size: 44px;
 }
 
@@ -31,14 +38,12 @@ header {
     border: none;
     border-radius: 11px;
     padding-left: 2.5vw;
-    font-family: var(--font-input);
   }
   &--input:focus {
     outline: none;
   }
 
   &--btn {
-    // background-color: black;
     width: 51px;
     height: 52px;
     border-radius: 10px;
@@ -48,4 +53,85 @@ header {
     border: none;
     visibility: hidden;
   }
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0 6vw 0 6vw;
+  grid-gap: 7vh 1vw;
+  place-items: center;
+}
+
+.recipe-card {
+  width: 380px;
+  border-radius: 21px;
+  height: fit-content;
+  box-shadow: 0px 4px 34px 30px rgba(0, 0, 0, 0.04);
+}
+
+.recipe-image {
+  width: 380px;
+  height: 253px;
+  object-fit: cover;
+  border-radius: 21px 21px 0 0;
+
+}
+
+  .time-tag {
+    top: 2vh;
+    right: 1.5vw;
+    width: 4.5vw;
+    height: 3vh;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.recipe-container {
+
+  &--title {
+  font-size: 18px;
+}
+  &---description {
+  width: 100%;
+  max-height: 80px;
+  white-space: normal;
+  overflow: auto;
+  scrollbar-width: none;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+&--recette, &--ingredients {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+}
+
+/* Chrome, Safari, Edge (Chromium) */
+.scrollbox::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  /* ou: display: none; (selon versions) */
+}
+
+.list {
+  height: 11rem;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 55% 45% ;
+
+  &--item {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  &--details {
+    font-weight: 400;
+    font-size: 14px;
+
+  }
+
+
 }
