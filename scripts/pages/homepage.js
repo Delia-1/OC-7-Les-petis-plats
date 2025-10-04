@@ -8,7 +8,8 @@ const body = document.querySelector("body")
 
 body.appendChild(displayHeader())
 body.appendChild(displayAside())
-displayMain().then(main => body.appendChild(main))
+body.appendChild(displayMain())
+// displayMain().then(main => body.appendChild(main))
 
 
 

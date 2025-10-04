@@ -56,9 +56,16 @@ header {
 }
 
 .div-filter {
-  width: fit-content;
+  // width: fit-content;
   height: 60px;
   border-radius: 11px;
+}
+
+.list-container {
+  overflow: auto;
+  scrollbar-width: none;
+  white-space: normal;
+  max-height: 220px;
 }
 
 .filter-header {
@@ -71,12 +78,18 @@ header {
   font-weight: 500;
 }
 
+.search-input {
+width: 163px;
+height: 36px;
+}
+
 .item-list {
   list-style: none;
 }
 
 .open {
-  height: 200px;
+  width: 195px;
+  height: 315px;
 }
 
 main {

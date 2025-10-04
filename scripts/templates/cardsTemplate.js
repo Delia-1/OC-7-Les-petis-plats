@@ -4,11 +4,11 @@ import { openFilter } from "./filterTemplate.js";
 
 
 
-export const displayMain = async () => {
+export const displayMain =  () => {
 
   const main = document.createElement("main");
   main.classList.add("z-2")
-  const data = await getRecipes()
+  const data = getRecipes()
 
     data.forEach(recipe => {
     const card = cardTemplate(recipe)
@@ -18,9 +18,6 @@ export const displayMain = async () => {
 openFilter()
 return main
 }
-
-
-
 
 
 

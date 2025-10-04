@@ -1,4 +1,4 @@
- const getRecipes = async () => {
+ const getRecipes = () => {
   const data = recipes
   // const ingredientsObj = data.forEach(recipe => {
   //   recipe.ingredients[0]
