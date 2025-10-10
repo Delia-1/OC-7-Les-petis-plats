@@ -1,55 +1,58 @@
 import getRecipes from "../utils/getRecipies.js";
 import { ElementFactory } from "../factory/elementsFactory.js";
-import { ingredientsTemplate } from "./cardsTemplate.js";
-
-// const ingredientsOb = data.recipe.ingredients
-// ustensils= recipe.ustensils
-// applicance = recipe.appliance
 
 const filtersObj = [
   { id: "Ingrédients", items: [] },
   { id: "Appareils", items: [] },
   { id: "Ustensiles", items: [] },
 ];
-const getIngredients = (category) => {
-
-  const data = getRecipes();
+export const getCategoryItems = (data, category) => {
   const list = [];
 
   data.forEach((recipe) => {
     if (category === "ingredients") {
       recipe.ingredients.forEach((item) => {
-        list.push(item.ingredient);
-    filtersObj[0].items = list;
-
+        if (!list.includes(item)) {
+          list.push(item.ingredient);
+        }
       });
     } else if (category === "appliance") {
-      list.push(recipe.appliance);
-    filtersObj[1].items = list;
-
+      if (!list.includes(recipe.appliance)) {
+        list.push(recipe.appliance);
+      }
     } else if (category === "ustensils") {
-      recipe.ustensils.forEach((ust) => list.push(ust));
-    filtersObj[2].items = list;
-
+      recipe.ustensils.forEach((ust) => {
+        if (!list.includes(ust)) {
+          list.push(ust);
+        }
+      });
     }
   });
 
   return [...new Set(list)];
 };
 
+export const filtersFirstRender= (data) => {
 
+  // const data = getRecipes();
+  filtersObj[0].items = getCategoryItems(data, "ingredients");
+  filtersObj[1].items = getCategoryItems(data, "appliance");
+  filtersObj[2].items = getCategoryItems(data, "ustensils");
+}
 
-getIngredients("ingredients")
-getIngredients("appliance")
-getIngredients("ustensils")
+export function filtersUpdate(filteredRecipes) {
+  filtersObj[0].items = getCategoryItems(filteredRecipes, "ingredients");
+  filtersObj[1].items = getCategoryItems(filteredRecipes, "appliance");
+  filtersObj[2].items = getCategoryItems(filteredRecipes, "ustensils");
+}
 
-// getIngredients("ingredients").then((itemsArr) => {
+// getCategoryItems("ingredients").then((itemsArr) => {
 //   filtersObj[0].items = itemsArr;
 // });
-// getIngredients("appliance").then((itemsArr) => {
+// getCategoryItems("appliance").then((itemsArr) => {
 //   filtersObj[1].items = itemsArr;
 // });
-// getIngredients("ustensils").then((itemsArr) => {
+// getCategoryItems("ustensils").then((itemsArr) => {
 //   filtersObj[2].items = itemsArr;
 // });
 export const displayAside = () => {

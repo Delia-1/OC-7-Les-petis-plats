@@ -1,6 +1,7 @@
 import { ElementFactory } from "../factory/elementsFactory.js";
 import getRecipes from "../utils/getRecipies.js";
 import { displayMain } from "./cardsTemplate.js";
+import { displayAside, openFilter, filtersUpdate } from "./filterTemplate.js";
 
 export const displayHeader = () => {
   const header = headerTemplate();
@@ -55,37 +56,45 @@ export const indexData = (data) => {
   return index;
 };
 
-
 export const getRightRecipes = (data) => {
   const index = indexData(data);
-  const inputUser = document.querySelector(".search-bar--input");
+  const searchBtn = document.querySelector(".search-bar--btn")
 
-  inputUser.addEventListener("keyup", (e) => {
-    if (e.target.value.length >= 3) {
+  searchBtn.addEventListener("click", (e) => {
+    e.preventDefault()
+    const inputUser = document.querySelector(".search-bar--input").value;
+    if (inputUser.length >= 3) {
       let found = false;
       let allIds = [];
 
       Object.entries(index).forEach(([word, ids]) => {
-        if (word.startsWith(normalize(e.target.value))) {
+        if (word.startsWith(normalize(inputUser))) {
           allIds.push(...ids);
           found = true;
         }
       });
       const uniq = [...new Set(allIds)];
-      displayFiltered(uniq, data);
 
-      !found && displayFiltered([], data);
+      // Met a jour main avec les bonnes recttes
+      updateSearch(uniq, data);
+      !found && updateSearch([], data);
     }
   });
 };
 
-export const displayFiltered = (uniq, data) => {
-  const updatedData = data.filter((recipe) => uniq.includes(recipe.id));
+export const updateSearch = (uniq, data) => {
+  const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
+
+  filtersUpdate(filteredData);
+  let aside = document.querySelector(".search-aside");
+  aside.innerHTML = "";
+  aside.appendChild(displayAside(filteredData));
 
   let main = document.querySelector("main");
-
   main.innerHTML = "";
-  main.appendChild(displayMain(updatedData));
+  main.appendChild(displayMain(filteredData));
+
+  openFilter();
 };
 
 export const headerTemplate = () => {

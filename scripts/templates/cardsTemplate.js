@@ -1,4 +1,3 @@
-import getRecipes from "../utils/getRecipies.js"
 import { ElementFactory } from "../factory/elementsFactory.js";
 import { openFilter } from "./filterTemplate.js";
 
