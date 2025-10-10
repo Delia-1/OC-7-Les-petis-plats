@@ -4,15 +4,12 @@ import { openFilter } from "./filterTemplate.js";
 
 
 
-export const displayMain =  () => {
+export const displayMain =  (data) => {
 
   const main = document.createElement("main");
-  main.classList.add("z-2")
-  const data = getRecipes()
-
-    data.forEach(recipe => {
-    const card = cardTemplate(recipe)
-    main.appendChild(card)
+  main.classList.add("z-2");
+  data.forEach(recipe => {
+    main.appendChild(cardTemplate(recipe));
   });
 
 openFilter()

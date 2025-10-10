@@ -1,24 +1,15 @@
+import getRecipes from "../utils/getRecipies.js";
 import { displayMain } from "../templates/cardsTemplate.js";
 import { displayAside } from "../templates/filterTemplate.js";
-import { displayHeader } from "../templates/headerTemplate.js";
+import { displayFiltered, displayHeader } from "../templates/headerTemplate.js";
+import { getRightRecipes, indexData } from "../templates/headerTemplate.js";
 
-
+const recipeData = getRecipes()
 const body = document.querySelector("body")
 
 
 body.appendChild(displayHeader())
+getRightRecipes(recipeData)
+
 body.appendChild(displayAside())
-body.appendChild(displayMain())
-// displayMain().then(main => body.appendChild(main))
-
-
-
-
-
-// Sans doute essayer de former 3 array (ingrédients, ustensils,... avec liste de tous les items)
-// ingrédients = ["","",]
-// ou objets avec ca dedans
-// filters {
-//   ustensils : ["",""],
-//   ingredients: ["", "", ""]
-// }
+body.appendChild(displayMain(recipeData))
