@@ -1,4 +1,4 @@
-import { normalize, getRecipeIdsFromKeywords } from "../utils/getRecipies.js";
+import { normalize, getRecipeIdsFromKeywords, countData } from "../utils/getRecipies.js";
 import { ElementFactory } from "../factory/elementsFactory.js";
 import { updateSearch } from "./headerTemplate.js";
 
@@ -42,11 +42,23 @@ export function filtersUpdate(filteredRecipes) {
 
 export const displayAside = () => {
   const asideContainer = ElementFactory.create("aside", {
-    className: "  search-aside d-flex z-3 position-absolute",
+    className: " search-aside d-flex z-3 position-relative w-100",
     ariaExpended: true,
     dataKey: "",
     innerHTML: "",
   });
+
+          const countDiv = ElementFactory.create("div", {
+        className: "count-div position-absolute",
+      })
+
+        const countText = ElementFactory.create("h3", {
+        className: "count-text ",
+        text: ""
+      })
+
+      asideContainer.el.appendChild(countDiv.el);
+      countDiv.el.appendChild(countText.el);
 
   filtersObj.forEach((item) => {
     const currentNode = filterSectionTemplate(item);
@@ -119,14 +131,13 @@ export const setupIngredientFilter = (data, index) => {
       list.innerHTML = "";
 
       displayLiFilters(list.closest(".div-filter"), { items: newFilteredList });
-      selectAndUpdate(data, index);
 
       return newFilteredList;
     });
   });
 };
 
-const selectAndUpdate = (data, index) => {
+export const selectAndUpdate = (data, index) => {
   const inputIngredient = document.querySelectorAll(".search-input");
   inputIngredient.forEach((input) => {
     const list = input.parentElement.querySelector(".item-list");
@@ -136,7 +147,7 @@ const selectAndUpdate = (data, index) => {
       item.addEventListener("click", (e) => {
         const selectedKeywords = [normalize(item.innerHTML)];
         const ids = getRecipeIdsFromKeywords(selectedKeywords, index.filters);
-
+        countData(data)
         updateSearch(ids, data, index);
       });
     });
@@ -180,6 +191,9 @@ export const filterSectionTemplate = () => {
     className: "item-list",
   });
 
+
+
+
   divFilter.el.appendChild(divFilterHeader.el);
   divFilterHeader.el.appendChild(filterName.el);
   divFilterHeader.el.appendChild(dropdownnIcon.el);
@@ -188,6 +202,7 @@ export const filterSectionTemplate = () => {
   divFilterContent.el.appendChild(itemList.el);
   divFilterContent.el.appendChild(listContainer.el);
   listContainer.el.appendChild(itemList.el);
+
 
   return divFilter.el;
 };

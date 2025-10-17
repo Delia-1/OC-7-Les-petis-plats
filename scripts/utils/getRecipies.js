@@ -6,6 +6,15 @@ export const getRecipes = () => {
   return data
 };
 
+export const countData = (data= getRecipes()) => {
+  const dataLength = data.length;
+  const countText = document.querySelector(".count-text")
+  if (countText) {
+  countText.textContent = `${dataLength} recettes`;
+}
+  console.log(dataLength)
+}
+
 
 export function normalize(s) {
   const newS = s

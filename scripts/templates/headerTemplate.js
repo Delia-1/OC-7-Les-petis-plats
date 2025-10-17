@@ -1,9 +1,10 @@
 import { ElementFactory } from "../factory/elementsFactory.js";
-import { normalize } from "../utils/getRecipies.js";
+import { countData, normalize } from "../utils/getRecipies.js";
 import { displayMain } from "./cardsTemplate.js";
 import {
   displayAside,
   filtersUpdate,
+  selectAndUpdate,
   setupIngredientFilter,
 } from "./filterTemplate.js";
 
@@ -12,32 +13,32 @@ export const displayHeader = () => {
   return header;
 };
 
-let isHeaderSearchBound = false
+let isHeaderSearchBound = false;
 
 export const getRightRecipes = (data, index) => {
-  if (isHeaderSearchBound) return
-  isHeaderSearchBound = true
+  if (isHeaderSearchBound) return;
+  isHeaderSearchBound = true;
 
   const searchBtn = document.querySelector(".search-bar--btn");
 
   searchBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const inputUser = document.querySelector(".search-bar--input").value;
-    if (inputUser.length < 3) return
+    if (inputUser.length < 3) return;
 
-      const rightIndex = index.text;
-      const normalizedInput = normalize(inputUser)
-      let allIds = [];
+    const rightIndex = index.text;
+    const normalizedInput = normalize(inputUser);
+    let allIds = [];
 
-      // Ici pour je compare chaque entrée de l'index avec l'input user.
-      // si ca match les ids de recette associées (en valeur de l'objet) remplissent l'array d'ids
-      Object.entries(rightIndex).forEach(([word, ids]) => {
-        if (word.startsWith(normalizedInput)) allIds.push(...ids);
-      });
-      // supprimer les doublons
-      const uniq = [...new Set(allIds)];
+    // Ici pour je compare chaque entrée de l'index avec l'input user.
+    // si ca match les ids de recette associées (en valeur de l'objet) remplissent l'array d'ids
+    Object.entries(rightIndex).forEach(([word, ids]) => {
+      if (word.startsWith(normalizedInput)) allIds.push(...ids);
+    });
+    // supprimer les doublons
+    const uniq = [...new Set(allIds)];
 
-      updateSearch(uniq, data, index);
+    updateSearch(uniq, data, index);
   });
 };
 
@@ -55,6 +56,8 @@ export const updateSearch = (uniq, data, index) => {
   main.appendChild(displayMain(filteredData));
 
   setupIngredientFilter(filteredData, index);
+  selectAndUpdate(filteredData, index);
+  countData(filteredData)
 };
 
 export const headerTemplate = () => {

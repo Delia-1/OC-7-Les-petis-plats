@@ -92,6 +92,16 @@ height: 36px;
   height: 315px;
 }
 
+.count-div {
+  right: 100px;
+  align-self: center;
+}
+
+.count-text {
+  font-size: 21px;
+  font-weight: 400;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
