@@ -2,8 +2,7 @@ export class ArticleElement {
   constructor(options = {}) {
     this.el = document.createElement("article");
     this.el.className = options.className || "";
-    if (options.role)
-      this.el.setAttribute("role", options.role || "");
+    if (options.role) this.el.setAttribute("role", options.role || "");
     if (options.tabindex)
       this.el.setAttribute("tabindex", options.tabindex || "");
     if (options["data-index"] !== undefined) {
@@ -28,7 +27,7 @@ export class DivElement {
   constructor(options = {}) {
     this.el = document.createElement("div");
     this.el.className = options.className || "";
-        this.el.textContent = options.text || "";
+    this.el.textContent = options.text || "";
     if (options.id) this.el.id = options.id;
     if (options.ariaLabel)
       this.el.setAttribute("aria-label", options.ariaLabel);
@@ -43,8 +42,7 @@ export class DivElement {
       );
     if (options.ariaSelected)
       this.el.setAttribute("aria-selected", options.ariaSelected);
-    if (options.dataKey)
-        this.el.setAttribute("data-key", options.dataKey);
+    if (options.dataKey) this.el.setAttribute("data-key", options.dataKey);
   }
 }
 
@@ -105,7 +103,7 @@ export class FormElement {
   constructor(options = {}) {
     this.el = document.createElement("form");
     this.el.className = options.className || "";
-}
+  }
 }
 
 export class LabelElement {
@@ -162,7 +160,7 @@ export class BrElement {
   constructor() {
     this.el = document.createElement("br");
   }
-};
+}
 
 export class ListElement {
   constructor(options = {}) {
@@ -182,12 +180,12 @@ export class InputElement {
     if (options.ariaAutoComplete)
       this.el.setAttribute("aria-auto-ccomplete", options.ariaAutoComplete);
   }
-
 }
 
 export class ItemElement {
   constructor(options = {}) {
     this.el = document.createElement("li");
+    this.el.id = options.id || "";
     this.el.className = options.className || "";
     this.el.textContent = options.text || "";
   }
@@ -199,6 +197,10 @@ export class SectionElement {
     this.el.className = options.className || "";
     if (options.ariaLabel)
       this.el.setAttribute("aria-label", options.ariaLabel);
+    if (options.ariaExpanded)
+      this.el.setAttribute("aria-expanded", options.ariaExpanded);
+    if (options.dataKey) this.el.setAttribute("data-key", options.dataKey);
+    if (options.innerHTML) this.el.setAttribute("innerHtml", options.innerHTML);
   }
 }
 

@@ -1,5 +1,6 @@
-import getRecipes from "../utils/getRecipies.js";
+import { normalize, getRecipeIdsFromKeywords} from "../utils/getRecipies.js";
 import { ElementFactory } from "../factory/elementsFactory.js";
+import { updateSearch } from "./headerTemplate.js";
 
 const filtersObj = [
   { id: "Ingrédients", items: [] },
@@ -32,13 +33,11 @@ export const getCategoryItems = (data, category) => {
   return [...new Set(list)];
 };
 
-export const filtersFirstRender= (data) => {
-
-  // const data = getRecipes();
+export const filtersFirstRender = (data) => {
   filtersObj[0].items = getCategoryItems(data, "ingredients");
   filtersObj[1].items = getCategoryItems(data, "appliance");
   filtersObj[2].items = getCategoryItems(data, "ustensils");
-}
+};
 
 export function filtersUpdate(filteredRecipes) {
   filtersObj[0].items = getCategoryItems(filteredRecipes, "ingredients");
@@ -46,27 +45,13 @@ export function filtersUpdate(filteredRecipes) {
   filtersObj[2].items = getCategoryItems(filteredRecipes, "ustensils");
 }
 
-// getCategoryItems("ingredients").then((itemsArr) => {
-//   filtersObj[0].items = itemsArr;
-// });
-// getCategoryItems("appliance").then((itemsArr) => {
-//   filtersObj[1].items = itemsArr;
-// });
-// getCategoryItems("ustensils").then((itemsArr) => {
-//   filtersObj[2].items = itemsArr;
-// });
 export const displayAside = () => {
-  const asideContainer = document.createElement("aside");
-  asideContainer.classList.add(
-    "search-aside",
-    "d-flex",
-    "z-3",
-    "position-absolute"
-  );
-  asideContainer.setAttribute("aria-expended", "true");
-  asideContainer.setAttribute("data-key", "");
-
-  asideContainer.innerHTML = "";
+  const asideContainer = ElementFactory.create("aside", {
+    className: "  search-aside d-flex z-3 position-absolute",
+    ariaExpended: true,
+    dataKey: "",
+    innerHTML: "",
+  });
 
   filtersObj.forEach((item) => {
     const currentNode = filterSectionTemplate(item);
@@ -74,17 +59,22 @@ export const displayAside = () => {
 
     currentNode.dataset.key = item.id;
     filterName.textContent = item.id;
-
-    asideContainer.appendChild(currentNode);
-
-    const list = currentNode.querySelector(".item-list");
-    item.items.forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = item;
-      list.appendChild(li);
-    });
+    asideContainer.el.appendChild(currentNode);
+    displayLiFilters(currentNode, item);
   });
-  return asideContainer;
+  return asideContainer.el;
+};
+
+export const displayLiFilters = (currentNode, item) => {
+  const list = currentNode.querySelector(".item-list");
+  item.items.forEach((item) => {
+    const li = ElementFactory.create("li", {
+      id: normalize(item),
+      text: item,
+      className: "list-item",
+    });
+    list.appendChild(li.el);
+  });
 };
 
 export const openFilter = () => {
@@ -92,6 +82,9 @@ export const openFilter = () => {
 
   asideContainer.addEventListener("click", (e) => {
     const header = e.target.closest(".filter-header");
+
+
+    if (!header) return;
 
     const root = header.closest(".div-filter");
     const content = root.querySelector(".div-filter--content");
@@ -108,6 +101,58 @@ export const openFilter = () => {
     }
   });
 };
+
+export const setupIngredientFilter = (data, index) => {
+  const inputIngredient = document.querySelectorAll(".search-input");
+inputIngredient.forEach(input => {
+  const list = input.parentElement.querySelector(".item-list");
+   if (!input || !list) return;
+
+  let filteredList = [];
+  const items = list.querySelectorAll("li");
+  items.forEach((item) => {
+    filteredList.push(item.innerHTML);
+  });
+
+  input.addEventListener("keyup", (e) => {
+    const newFilteredList = filteredList.filter((item) =>
+      normalize(item).includes(normalize(input.value))
+    );
+    newFilteredList.sort();
+    list.innerHTML = "";
+
+    displayLiFilters(list.closest(".div-filter"), { items: newFilteredList });
+    selectAndUpdate(data, index)
+
+    return newFilteredList
+  });
+})
+
+
+};
+
+const selectAndUpdate = (data, index) => {
+  const inputIngredient = document.querySelectorAll(".search-input");
+inputIngredient.forEach(input => {
+  const list = input.parentElement.querySelector(".item-list");
+
+    const items = list.querySelectorAll("li");
+  items.forEach((item) => {
+    item.addEventListener("click", (e) => {
+const selectedKeywords = [normalize(item.innerHTML)]
+const ids = getRecipeIdsFromKeywords(selectedKeywords, index.filters)
+
+
+
+      updateSearch(ids, data, index)
+
+    })
+  });
+})
+
+
+}
+
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {

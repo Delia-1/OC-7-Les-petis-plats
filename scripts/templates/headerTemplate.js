@@ -1,73 +1,27 @@
 import { ElementFactory } from "../factory/elementsFactory.js";
-import getRecipes from "../utils/getRecipies.js";
+import {normalize} from "../utils/getRecipies.js";
 import { displayMain } from "./cardsTemplate.js";
-import { displayAside, openFilter, filtersUpdate } from "./filterTemplate.js";
+import { displayAside, openFilter, filtersUpdate, setupIngredientFilter } from "./filterTemplate.js";
 
 export const displayHeader = () => {
   const header = headerTemplate();
   return header;
 };
 
-function normalize(s) {
-  const newS = s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .trim();
-  return newS;
-}
+export const getRightRecipes = (data, index) => {
 
-export const indexData = (data) => {
-  let index = new Object();
 
-  data.forEach((recipe) => {
-    let tokens = new Set();
+    const searchBtn = document.querySelector(".search-bar--btn")
 
-    recipe.description
-      .replace(/[.,;:!?()]/g, "")
-      .split(/\s+/)
-      .filter((w) => w.length >= 3)
-      .forEach((w) => tokens.add(w));
-
-    recipe.name
-      .split(/\s+/)
-      .filter((w) => w.length >= 3)
-      .forEach((w) => tokens.add(w));
-
-    recipe.ingredients.forEach((part) => {
-      part.ingredient
-        .replace(/[.,;:!?()]/g, "")
-        .split(/\s+/)
-        .filter((w) => w.length >= 3)
-        .forEach((w) => tokens.add(w));
-    });
-
-    tokens.forEach((token) => {
-      const word = normalize(token);
-      if (!index[word]) index[word] = [];
-      if (!index[word].includes(recipe.id)) {
-        index[word].push(recipe.id);
-      }
-    });
-    return index;
-  });
-
-  console.log(index);
-  return index;
-};
-
-export const getRightRecipes = (data) => {
-  const index = indexData(data);
-  const searchBtn = document.querySelector(".search-bar--btn")
-
-  searchBtn.addEventListener("click", (e) => {
+      searchBtn.addEventListener("click", (e) => {
     e.preventDefault()
     const inputUser = document.querySelector(".search-bar--input").value;
     if (inputUser.length >= 3) {
       let found = false;
       let allIds = [];
+      const rightIndex = index.text
 
-      Object.entries(index).forEach(([word, ids]) => {
+      Object.entries(rightIndex).forEach(([word, ids]) => {
         if (word.startsWith(normalize(inputUser))) {
           allIds.push(...ids);
           found = true;
@@ -75,14 +29,20 @@ export const getRightRecipes = (data) => {
       });
       const uniq = [...new Set(allIds)];
 
-      // Met a jour main avec les bonnes recttes
-      updateSearch(uniq, data);
+      updateSearch(uniq, data, index);
       !found && updateSearch([], data);
     }
   });
+
+
+
+
+
+
+
 };
 
-export const updateSearch = (uniq, data) => {
+export const updateSearch = (uniq, data, index) => {
   const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
 
   filtersUpdate(filteredData);
@@ -93,6 +53,8 @@ export const updateSearch = (uniq, data) => {
   let main = document.querySelector("main");
   main.innerHTML = "";
   main.appendChild(displayMain(filteredData));
+
+  setupIngredientFilter(filteredData, index)
 
   openFilter();
 };
