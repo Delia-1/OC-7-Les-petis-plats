@@ -1,4 +1,4 @@
-import { normalize, getRecipeIdsFromKeywords} from "../utils/getRecipies.js";
+import { normalize, getRecipeIdsFromKeywords } from "../utils/getRecipies.js";
 import { ElementFactory } from "../factory/elementsFactory.js";
 import { updateSearch } from "./headerTemplate.js";
 
@@ -13,19 +13,14 @@ export const getCategoryItems = (data, category) => {
   data.forEach((recipe) => {
     if (category === "ingredients") {
       recipe.ingredients.forEach((item) => {
-        if (!list.includes(item)) {
-          list.push(item.ingredient);
-        }
+        const name = item.ingredient;
+        if (!list.includes(name)) list.push(name);
       });
     } else if (category === "appliance") {
-      if (!list.includes(recipe.appliance)) {
-        list.push(recipe.appliance);
-      }
+      if (!list.includes(recipe.appliance)) list.push(recipe.appliance);
     } else if (category === "ustensils") {
       recipe.ustensils.forEach((ust) => {
-        if (!list.includes(ust)) {
-          list.push(ust);
-        }
+        if (!list.includes(ust)) list.push(ust);
       });
     }
   });
@@ -77,82 +72,76 @@ export const displayLiFilters = (currentNode, item) => {
   });
 };
 
+let filtersToggleBound = false;
 export const openFilter = () => {
-  const asideContainer = document.querySelector(".search-aside");
+  if (filtersToggleBound) return;
+  filtersToggleBound = true;
 
+  const asideContainer = document.querySelector(".search-aside");
   asideContainer.addEventListener("click", (e) => {
     const header = e.target.closest(".filter-header");
-
-
     if (!header) return;
 
     const root = header.closest(".div-filter");
     const content = root.querySelector(".div-filter--content");
     const dropdown = root.querySelector(".dropdown-icon");
 
-    if (content.classList.contains("d-none")) {
-      content.classList.remove("d-none");
-      dropdown.src = "assets/dropdown-open.svg";
-      root.classList.add("open");
-    } else {
-      content.classList.add("d-none");
-      dropdown.src = "assets/dropdown-close.svg";
-      root.classList.remove("open");
-    }
+    const open = !root.classList.contains("open");
+    root.classList.toggle("open", open);
+    content.classList.toggle("d-none", !open);
+    if (dropdown)
+      dropdown.src = open
+        ? "assets/dropdown-open.svg"
+        : "assets/dropdown-close.svg";
   });
 };
 
 export const setupIngredientFilter = (data, index) => {
   const inputIngredient = document.querySelectorAll(".search-input");
-inputIngredient.forEach(input => {
-  const list = input.parentElement.querySelector(".item-list");
-   if (!input || !list) return;
+  inputIngredient.forEach((input) => {
+    if (input.dataset.bound === "1") return;
+    input.dataset.bound = "1";
 
-  let filteredList = [];
-  const items = list.querySelectorAll("li");
-  items.forEach((item) => {
-    filteredList.push(item.innerHTML);
+    const list = input.parentElement.querySelector(".item-list");
+    if (!input || !list) return;
+
+    let filteredList = [];
+    const items = list.querySelectorAll("li");
+    items.forEach((item) => {
+      filteredList.push(item.innerHTML);
+    });
+
+    input.addEventListener("keyup", (e) => {
+      const newFilteredList = filteredList.filter((item) =>
+        normalize(item).includes(normalize(input.value))
+      );
+      newFilteredList.sort();
+      list.innerHTML = "";
+
+      displayLiFilters(list.closest(".div-filter"), { items: newFilteredList });
+      selectAndUpdate(data, index);
+
+      return newFilteredList;
+    });
   });
-
-  input.addEventListener("keyup", (e) => {
-    const newFilteredList = filteredList.filter((item) =>
-      normalize(item).includes(normalize(input.value))
-    );
-    newFilteredList.sort();
-    list.innerHTML = "";
-
-    displayLiFilters(list.closest(".div-filter"), { items: newFilteredList });
-    selectAndUpdate(data, index)
-
-    return newFilteredList
-  });
-})
-
-
 };
 
 const selectAndUpdate = (data, index) => {
   const inputIngredient = document.querySelectorAll(".search-input");
-inputIngredient.forEach(input => {
-  const list = input.parentElement.querySelector(".item-list");
+  inputIngredient.forEach((input) => {
+    const list = input.parentElement.querySelector(".item-list");
 
     const items = list.querySelectorAll("li");
-  items.forEach((item) => {
-    item.addEventListener("click", (e) => {
-const selectedKeywords = [normalize(item.innerHTML)]
-const ids = getRecipeIdsFromKeywords(selectedKeywords, index.filters)
+    items.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        const selectedKeywords = [normalize(item.innerHTML)];
+        const ids = getRecipeIdsFromKeywords(selectedKeywords, index.filters);
 
-
-
-      updateSearch(ids, data, index)
-
-    })
+        updateSearch(ids, data, index);
+      });
+    });
   });
-})
-
-
-}
-
+};
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {

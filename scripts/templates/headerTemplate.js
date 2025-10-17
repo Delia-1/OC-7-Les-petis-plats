@@ -1,62 +1,60 @@
 import { ElementFactory } from "../factory/elementsFactory.js";
-import {normalize} from "../utils/getRecipies.js";
+import { normalize } from "../utils/getRecipies.js";
 import { displayMain } from "./cardsTemplate.js";
-import { displayAside, openFilter, filtersUpdate, setupIngredientFilter } from "./filterTemplate.js";
+import {
+  displayAside,
+  filtersUpdate,
+  setupIngredientFilter,
+} from "./filterTemplate.js";
 
 export const displayHeader = () => {
   const header = headerTemplate();
   return header;
 };
 
+let isHeaderSearchBound = false
+
 export const getRightRecipes = (data, index) => {
+  if (isHeaderSearchBound) return
+  isHeaderSearchBound = true
 
+  const searchBtn = document.querySelector(".search-bar--btn");
 
-    const searchBtn = document.querySelector(".search-bar--btn")
-
-      searchBtn.addEventListener("click", (e) => {
-    e.preventDefault()
+  searchBtn.addEventListener("click", (e) => {
+    e.preventDefault();
     const inputUser = document.querySelector(".search-bar--input").value;
-    if (inputUser.length >= 3) {
-      let found = false;
-      let allIds = [];
-      const rightIndex = index.text
+    if (inputUser.length < 3) return
 
+      const rightIndex = index.text;
+      const normalizedInput = normalize(inputUser)
+      let allIds = [];
+
+      // Ici pour je compare chaque entrée de l'index avec l'input user.
+      // si ca match les ids de recette associées (en valeur de l'objet) remplissent l'array d'ids
       Object.entries(rightIndex).forEach(([word, ids]) => {
-        if (word.startsWith(normalize(inputUser))) {
-          allIds.push(...ids);
-          found = true;
-        }
+        if (word.startsWith(normalizedInput)) allIds.push(...ids);
       });
+      // supprimer les doublons
       const uniq = [...new Set(allIds)];
 
       updateSearch(uniq, data, index);
-      !found && updateSearch([], data);
-    }
   });
-
-
-
-
-
-
-
 };
 
 export const updateSearch = (uniq, data, index) => {
   const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
 
   filtersUpdate(filteredData);
-  let aside = document.querySelector(".search-aside");
+
+  const aside = document.querySelector(".search-aside");
   aside.innerHTML = "";
   aside.appendChild(displayAside(filteredData));
 
-  let main = document.querySelector("main");
+  const main = document.querySelector("main");
   main.innerHTML = "";
   main.appendChild(displayMain(filteredData));
 
-  setupIngredientFilter(filteredData, index)
-
-  openFilter();
+  setupIngredientFilter(filteredData, index);
 };
 
 export const headerTemplate = () => {
