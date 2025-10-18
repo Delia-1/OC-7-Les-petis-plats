@@ -1,6 +1,20 @@
-import { normalize, getRecipeIdsFromKeywords, countData } from "../utils/getRecipies.js";
+import {
+  normalize,
+  getRecipeIdsFromKeywords,
+} from "../utils/getRecipies.js";
 import { ElementFactory } from "../factory/elementsFactory.js";
 import { updateSearch } from "./headerTemplate.js";
+
+export const activeTags = new Set();
+
+let tagBaselineData = [];
+
+
+export const setTagBaseline = (data) => {  // set une seule fois (avant 1er tag)
+  tagBaselineData = Array.isArray(data) ? data : [];
+};
+
+export const getTagBaseline = () => tagBaselineData;
 
 const filtersObj = [
   { id: "Ingrédients", items: [] },
@@ -35,6 +49,7 @@ export const filtersFirstRender = (data) => {
 };
 
 export function filtersUpdate(filteredRecipes) {
+  console.log("2 filtersUpdate ici", filteredRecipes)
   filtersObj[0].items = getCategoryItems(filteredRecipes, "ingredients");
   filtersObj[1].items = getCategoryItems(filteredRecipes, "appliance");
   filtersObj[2].items = getCategoryItems(filteredRecipes, "ustensils");
@@ -48,17 +63,18 @@ export const displayAside = () => {
     innerHTML: "",
   });
 
-          const countDiv = ElementFactory.create("div", {
-        className: "count-div position-absolute",
-      })
+  const countDiv = ElementFactory.create("div", {
+    className: "count-div position-absolute",
+  });
 
-        const countText = ElementFactory.create("h3", {
-        className: "count-text ",
-        text: ""
-      })
+  const countText = ElementFactory.create("h3", {
+    className: "count-text ",
+    text: "",
+  });
 
-      asideContainer.el.appendChild(countDiv.el);
-      countDiv.el.appendChild(countText.el);
+  asideContainer.el.appendChild(countDiv.el);
+
+  countDiv.el.appendChild(countText.el);
 
   filtersObj.forEach((item) => {
     const currentNode = filterSectionTemplate(item);
@@ -69,8 +85,18 @@ export const displayAside = () => {
     asideContainer.el.appendChild(currentNode);
     displayLiFilters(currentNode, item);
   });
+
   return asideContainer.el;
 };
+
+
+export const displayTagList = () => {
+
+    const tagList = ElementFactory.create("ul", {
+    className: "tag-list d-flex gap-2"
+  })
+  return tagList.el
+}
 
 export const displayLiFilters = (currentNode, item) => {
   const list = currentNode.querySelector(".item-list");
@@ -84,13 +110,13 @@ export const displayLiFilters = (currentNode, item) => {
   });
 };
 
-let filtersToggleBound = false;
-export const openFilter = () => {
-  if (filtersToggleBound) return;
-  filtersToggleBound = true;
 
-  const asideContainer = document.querySelector(".search-aside");
-  asideContainer.addEventListener("click", (e) => {
+export const openFilter = () => {
+  const aside = document.querySelector(".search-aside");
+  if (!aside || aside.dataset.toggleBound === "1") return; // idempotent par élément
+  aside.dataset.toggleBound = "1";
+
+  aside.addEventListener("click", (e) => {
     const header = e.target.closest(".filter-header");
     if (!header) return;
 
@@ -108,7 +134,7 @@ export const openFilter = () => {
   });
 };
 
-export const setupIngredientFilter = (data, index) => {
+export const setupIngredientFilter = () => {
   const inputIngredient = document.querySelectorAll(".search-input");
   inputIngredient.forEach((input) => {
     if (input.dataset.bound === "1") return;
@@ -138,21 +164,82 @@ export const setupIngredientFilter = (data, index) => {
 };
 
 export const selectAndUpdate = (data, index) => {
-  const inputIngredient = document.querySelectorAll(".search-input");
-  inputIngredient.forEach((input) => {
+  const inputs = document.querySelectorAll(".search-input");
+  inputs.forEach((input) => {
     const list = input.parentElement.querySelector(".item-list");
 
     const items = list.querySelectorAll("li");
     items.forEach((item) => {
-      item.addEventListener("click", (e) => {
-        const selectedKeywords = [normalize(item.innerHTML)];
-        const ids = getRecipeIdsFromKeywords(selectedKeywords, index.filters);
-        countData(data)
-        updateSearch(ids, data, index);
+      item.addEventListener("click", () => {
+        const label = item.innerHTML;
+        if (activeTags.size === 0) setTagBaseline(data);
+        displayTags(label)
+        recomputeFromTags(index)
       });
     });
   });
 };
+
+export const displayTags = (tagName) => {
+  const tagList = document.querySelector(".tag-list")
+
+
+  const key = normalize(tagName);
+  if (activeTags.has(key)) return;
+  activeTags.add(key);
+
+
+    const li = ElementFactory.create("li", {
+    className: "tag bg-yellow d-flex justify-content-between align-items-center text-dark",
+    text: tagName,
+    dataset: { key },
+  })
+li.el.dataset.key = key;
+
+  const cutTag = ElementFactory.create("button", {
+    className: "cut-tag",
+    ariaLabel: `Retirer le filtre « ${tagName} »`,
+  })
+
+  const close = ElementFactory.create("img", {
+    className: " close-img",
+    src: "assets/darkCrossIcon.svg",
+    alt: "supprimer le tag"
+  })
+  li.el.appendChild(cutTag.el)
+  cutTag.el.appendChild(close.el)
+  tagList.appendChild(li.el)
+};
+
+const recomputeFromTags = ( index) =>{
+  const base = getTagBaseline();
+  const keywords = [ ...activeTags];
+    const ids = keywords.length
+    ? getRecipeIdsFromKeywords(keywords, index.filters)
+    : base.map(r => r.id);
+    updateSearch(ids, base, index)
+
+}
+
+
+export const bindTagBar = ( index) => {
+  const tagList = document.querySelector(".tag-list");
+  if (!tagList || tagList.dataset.bound === "1") return;
+  tagList.dataset.bound = "1"
+
+  tagList.addEventListener("click", (e) => {
+    const btn = e.target.closest(".cut-tag")
+    if (!btn) return;
+    const tag = btn.closest(".tag")
+    const key = tag?.dataset?.key
+
+    if(!key) return
+    console.log("clicked")
+    activeTags.delete(key);
+    tag.remove();
+    recomputeFromTags(index)
+  })
+}
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {
@@ -191,9 +278,6 @@ export const filterSectionTemplate = () => {
     className: "item-list",
   });
 
-
-
-
   divFilter.el.appendChild(divFilterHeader.el);
   divFilterHeader.el.appendChild(filterName.el);
   divFilterHeader.el.appendChild(dropdownnIcon.el);
@@ -202,7 +286,6 @@ export const filterSectionTemplate = () => {
   divFilterContent.el.appendChild(itemList.el);
   divFilterContent.el.appendChild(listContainer.el);
   listContainer.el.appendChild(itemList.el);
-
 
   return divFilter.el;
 };

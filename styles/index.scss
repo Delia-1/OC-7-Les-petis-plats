@@ -102,6 +102,34 @@ height: 36px;
   font-weight: 400;
 }
 
+
+// DIV TAG
+
+.tag-list {
+  list-style: none;
+  padding-left: 1.5rem;
+}
+.close-img {
+  width: 10px;
+}
+
+.tag {
+  width: min-content;
+  padding: 18px;
+  width: 15.5vw ;
+  height: 6.5vh;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 400;
+
+}
+
+.cut-tag {
+  width: min-content;
+  border: none;
+  background-color: transparent;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

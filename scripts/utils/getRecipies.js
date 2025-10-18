@@ -1,20 +1,19 @@
 export const getRecipes = () => {
-  const data = recipes
+  const data = recipes;
   // const ingredientsObj = data.forEach(recipe => {
   //   recipe.ingredients[0]
   // })
-  return data
+  return data;
 };
 
-export const countData = (data= getRecipes()) => {
+export const countData = (data = getRecipes()) => {
   const dataLength = data.length;
-  const countText = document.querySelector(".count-text")
+  const countText = document.querySelector(".count-text");
   if (countText) {
-  countText.textContent = `${dataLength} recettes`;
-}
-  console.log(dataLength)
-}
-
+    countText.textContent = `${dataLength} recettes`;
+  }
+  console.log(dataLength);
+};
 
 export function normalize(s) {
   const newS = s
@@ -25,14 +24,11 @@ export function normalize(s) {
   return newS;
 }
 
-
-
-
 export const indexData = (data = getRecipes()) => {
   let index = {
     text: {},
-    filters: {}
-  }
+    filters: {},
+  };
 
   data.forEach((recipe) => {
     let textTokens = new Set();
@@ -55,14 +51,13 @@ export const indexData = (data = getRecipes()) => {
         .filter((w) => w.length >= 3)
         .forEach((w) => textTokens.add(w));
 
-
       // Indexer l'expression complète de l'ingrédient
       const fullIng = normalize(part.ingredient);
       if (!index.filters[fullIng]) index.filters[fullIng] = [];
       index.filters[fullIng].push(recipe.id);
     });
 
- // Index appareil complet
+    // Index appareil complet
     if (recipe.appliance) {
       const appKey = normalize(recipe.appliance);
       if (!index.filters[appKey]) index.filters[appKey] = [];
@@ -78,7 +73,7 @@ export const indexData = (data = getRecipes()) => {
       });
     }
 
-     textTokens.forEach((token) => {
+    textTokens.forEach((token) => {
       if (!index.text[token]) index.text[token] = [];
       index.text[token].push(recipe.id);
     });
@@ -86,17 +81,15 @@ export const indexData = (data = getRecipes()) => {
   return index;
 };
 
-export function getRecipeIdsFromKeywords(keywords, index) {
-  // keywords : array de mots normalisés
-  // index : index inversé (mot → [ids])
+export function getRecipeIdsFromKeywords(keywords, dict) {
+  if (!Array.isArray(keywords) || !dict) return [];
   const lists = keywords
-    .map(word => index[word])
-    .filter(Boolean); // retire les mots non trouvés
+    .map((word) => dict[word] || [])
+    .filter((arr) => Array.isArray(arr) && arr.length > 0);
 
   if (lists.length === 0) return [];
   // Intersection des ids
-  return lists.reduce((acc, ids) => acc.filter(id => ids.includes(id)));
+  return lists.reduce((acc, ids) => acc.filter((id) => ids.includes(id)));
 }
 
-
-export default getRecipes
+export default getRecipes;

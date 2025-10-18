@@ -6,10 +6,15 @@ import {
   filtersUpdate,
   selectAndUpdate,
   setupIngredientFilter,
+  bindTagBar,
+  openFilter,
+  setTagBaseline,
+  activeTags
 } from "./filterTemplate.js";
 
 export const displayHeader = () => {
   const header = headerTemplate();
+
   return header;
 };
 
@@ -47,17 +52,37 @@ export const updateSearch = (uniq, data, index) => {
 
   filtersUpdate(filteredData);
 
-  const aside = document.querySelector(".search-aside");
-  aside.innerHTML = "";
-  aside.appendChild(displayAside(filteredData));
+  const oldAside = document.querySelector(".search-aside");
+  const tagList = document.querySelector(".tag-list")
+  const parent = oldAside?.parentElement;
 
-  const main = document.querySelector("main");
+   if (oldAside) oldAside.remove();
+ const newAside = displayAside();
+   if (parent) {
+    if (tagList && tagList.parentElement === parent) {
+      parent.insertBefore(newAside, tagList);
+    } else {
+      parent.appendChild(newAside);
+    }
+  }
+
+  openFilter()
+  setupIngredientFilter();
+  selectAndUpdate(filteredData, index);
+  bindTagBar( index);
+
+  let main = document.querySelector("main");
+   if (!main) { main = document.createElement("main"); document.body.appendChild(main); }
   main.innerHTML = "";
+
   main.appendChild(displayMain(filteredData));
 
-  setupIngredientFilter(filteredData, index);
-  selectAndUpdate(filteredData, index);
+
   countData(filteredData)
+
+   if (activeTags.size === 0) {
+   setTagBaseline(filteredData);
+ }
 };
 
 export const headerTemplate = () => {
