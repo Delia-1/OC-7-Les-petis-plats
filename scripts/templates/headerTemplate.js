@@ -26,29 +26,42 @@ export const getRightRecipes = (data, index) => {
 
   const searchBtn = document.querySelector(".search-bar--btn");
 
-  searchBtn.addEventListener("click", () => {
+  searchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
     getRightRecipesLaunched()
   });
     searchBtn.addEventListener("keydown", (e) => {
       if(e.key === "Enter") {
+          e.preventDefault();
         getRightRecipesLaunched()
       }
   });
 
 
   const getRightRecipesLaunched = () => {
-
-      e.preventDefault();
       const inputUser = document.querySelector(".search-bar--input").value;
       if (inputUser.length < 3) return;
 
       const rightIndex = index.text;
       const normalizedInput = normalize(inputUser);
       let allIds = [];
-      // AREMP-forEach
-      Object.entries(rightIndex).forEach(([word, ids]) => {
-        if (word.startsWith(normalizedInput)) allIds.push(...ids);
-      });
+
+      // Object.entries(rightIndex).forEach(([word, ids]) => {
+        //   if (word.startsWith(normalizedInput)) allIds.push(...ids);
+        // });
+
+        // REMP-forEach
+      const entries = Object.entries(rightIndex)
+      for (let i = 0; i < entries.length; i++) {
+        const pair = entries[i]// toute l'entrée
+        const word = pair[0]//Le mot associé
+        const ids = pair[1]//L'ids associés
+        if (word.startsWith(normalizedInput)) {
+          for (let j = 0; j < ids.length ; j++) {
+            allIds.push(ids[j])
+          }
+        }
+      }
       const uniq = [...new Set(allIds)];
       console.log("uniq", uniq)
 
@@ -58,8 +71,14 @@ export const getRightRecipes = (data, index) => {
 };
 
 export const updateSearch = (uniq, data, index) => {
-  // AREMP filter
-  const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
+  // const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
+  
+  // REMP filter
+  const uniqSet = new Set(uniq)
+  const filteredData = [];
+  for ( const recipe of data) {
+    if (uniqSet.has(recipe.id)) filteredData.push(recipe);
+  }
 
   filtersUpdate(filteredData);
 

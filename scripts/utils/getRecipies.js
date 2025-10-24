@@ -24,11 +24,18 @@ export function normalize(s) {
 export const formatTokens = (t, textTokens) => {
   if (!t) return;
   const cleaned = normalize(t.replace(/[.,;:!?()'’"«»\-]/g, " "));
-  cleaned
-    .split(/\s+/)
-    // AREMP x2 forEach
-    .filter((w) => w.length >= 3)
-    .forEach((w) => textTokens.add(w));
+  const cleanedAndSplitted = cleaned.split(/\s+/)
+  const uniqTokens = new Set();
+    // REMP x2 forEach
+    // .filter((w) => w.length >= 3)
+    for (const word of cleanedAndSplitted) {
+      if (word.length >=3)
+        {uniqTokens.add(word)}
+    }
+    // uniqTokens.forEach((w) => textTokens.add(w));
+    for (const word of uniqTokens) {
+      textTokens.add(word)
+    }
 }
 
 export const indexData = (data = getRecipes()) => {
@@ -36,22 +43,38 @@ export const indexData = (data = getRecipes()) => {
     text: {},
     filters: {},
   };
-// AREMP- forEach
-  data.forEach((recipe) => {
-    let textTokens = new Set();
+// REMP- forEach
+//   data.forEach((recipe) => {
+//     let textTokens = new Set();
 
-      formatTokens(recipe.description, textTokens)
-      formatTokens(recipe.name, textTokens)
+//       formatTokens(recipe.description, textTokens)
+//       formatTokens(recipe.name, textTokens)
 
-// AREMP-forEach
-    recipe.ingredients.forEach((part) => {
-      formatTokens(part.ingredient, textTokens)
+// // REMP-forEach
+//     recipe.ingredients.forEach((part) => {
+//       formatTokens(part.ingredient, textTokens)
 
-      // Indexer l'expression complète de l'ingrédient
-      const fullIng = normalize(part.ingredient);
-      if (!index.filters[fullIng]) index.filters[fullIng] = [];
-      index.filters[fullIng].push(recipe.id);
-    });
+//       // Indexer l'expression complète de l'ingrédient
+//       const fullIng = normalize(part.ingredient);
+//       if (!index.filters[fullIng]) index.filters[fullIng] = [];
+//       index.filters[fullIng].push(recipe.id);
+//     });
+
+  for (let i = 0; i < data.length; i++) {
+    const recipe = data[i]
+      let textTokens = new Set();
+
+        formatTokens(recipe.description, textTokens)
+        formatTokens(recipe.name, textTokens)
+
+        for ( let j = 0; j < recipe.ingredients.length; j++) {
+          const part = recipe.ingredients[j]
+          formatTokens(part.ingredient, textTokens)
+            const fullIng = normalize(part.ingredient);
+        if (!index.filters[fullIng]) index.filters[fullIng] = [];
+        index.filters[fullIng].push(recipe.id);
+        }
+
 
     // Index appareil complet
     if (recipe.appliance) {
@@ -62,19 +85,31 @@ export const indexData = (data = getRecipes()) => {
 
     // Index ustensiles complets
     if (recipe.ustensils) {
-      // AREMP forEach
-      recipe.ustensils.forEach((ust) => {
-        const ustKey = normalize(ust);
+      // REMP forEach
+      // recipe.ustensils.forEach((ust) => {
+      //   const ustKey = normalize(ust);
+      //   if (!index.filters[ustKey]) index.filters[ustKey] = [];
+      //   index.filters[ustKey].push(recipe.id);
+      // });
+      for (let k = 0; k < recipe.ustensils.length; k++) {
+        const ustKey = normalize(recipe.ustensils[k])
         if (!index.filters[ustKey]) index.filters[ustKey] = [];
         index.filters[ustKey].push(recipe.id);
-      });
+      }
     }
-      // AREMP forEach
-    textTokens.forEach((token) => {
-      if (!index.text[token]) index.text[token] = [];
+
+      // REMP forEach
+    // textTokens.forEach((token) => {
+    //   if (!index.text[token]) index.text[token] = [];
+    //   index.text[token].push(recipe.id);
+    // });
+
+    for (const token of textTokens) {
+       if (!index.text[token]) index.text[token] = [];
       index.text[token].push(recipe.id);
-    });
-  });
+    }
+  }
+  // });
   return index;
 };
 
