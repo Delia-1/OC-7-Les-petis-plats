@@ -26,19 +26,21 @@ export const getRightRecipes = (data, index) => {
 
   const searchBtn = document.querySelector(".search-bar--btn");
 
-  searchBtn.addEventListener("click", () => {
-    getRightRecipesLaunched()
+  searchBtn.addEventListener("click", (e) => {
+ e.preventDefault();
+    getRightRecipesLaunched(e)
   });
     searchBtn.addEventListener("keydown", (e) => {
       if(e.key === "Enter") {
-        getRightRecipesLaunched()
+ e.preventDefault();
+      getRightRecipesLaunched(e)
       }
   });
 
 
-  const getRightRecipesLaunched = () => {
-
-      e.preventDefault();
+  const getRightRecipesLaunched = (e) => {
+    if (e && typeof e.preventDefault === "function") e.preventDefault();
+      console.log("j'arriva cic")
       const inputUser = document.querySelector(".search-bar--input").value;
       if (inputUser.length < 3) return;
 
@@ -135,6 +137,7 @@ export const headerTemplate = () => {
   const searchBarBtn = ElementFactory.create("button", {
     className: "search-bar--btn bg-dark",
     ariaLabel: "Rechercher",
+    type: "button"
   });
 
   const loupeIcon = ElementFactory.create("img", {
