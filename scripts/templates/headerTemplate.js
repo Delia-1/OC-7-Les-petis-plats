@@ -19,35 +19,46 @@ export const displayHeader = () => {
 };
 
 let isHeaderSearchBound = false;
-
+// OUI A TRANSFORMER
 export const getRightRecipes = (data, index) => {
   if (isHeaderSearchBound) return;
   isHeaderSearchBound = true;
 
   const searchBtn = document.querySelector(".search-bar--btn");
 
-  searchBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    const inputUser = document.querySelector(".search-bar--input").value;
-    if (inputUser.length < 3) return;
-
-    const rightIndex = index.text;
-    const normalizedInput = normalize(inputUser);
-    let allIds = [];
-
-    // Ici pour je compare chaque entrée de l'index avec l'input user.
-    // si ca match les ids de recette associées (en valeur de l'objet) remplissent l'array d'ids
-    Object.entries(rightIndex).forEach(([word, ids]) => {
-      if (word.startsWith(normalizedInput)) allIds.push(...ids);
-    });
-    // supprimer les doublons
-    const uniq = [...new Set(allIds)];
-
-    updateSearch(uniq, data, index);
+  searchBtn.addEventListener("click", () => {
+    getRightRecipesLaunched()
   });
+    searchBtn.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") {
+        getRightRecipesLaunched()
+      }
+  });
+
+
+  const getRightRecipesLaunched = () => {
+
+      e.preventDefault();
+      const inputUser = document.querySelector(".search-bar--input").value;
+      if (inputUser.length < 3) return;
+
+      const rightIndex = index.text;
+      const normalizedInput = normalize(inputUser);
+      let allIds = [];
+      // AREMP-forEach
+      Object.entries(rightIndex).forEach(([word, ids]) => {
+        if (word.startsWith(normalizedInput)) allIds.push(...ids);
+      });
+      const uniq = [...new Set(allIds)];
+      console.log("uniq", uniq)
+
+      updateSearch(uniq, data, index);
+    }
+
 };
 
 export const updateSearch = (uniq, data, index) => {
+  // AREMP filter
   const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
 
   filtersUpdate(filteredData);

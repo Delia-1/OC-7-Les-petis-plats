@@ -1,8 +1,5 @@
 export const getRecipes = () => {
   const data = recipes;
-  // const ingredientsObj = data.forEach(recipe => {
-  //   recipe.ingredients[0]
-  // })
   return data;
 };
 
@@ -24,32 +21,31 @@ export function normalize(s) {
   return newS;
 }
 
+export const formatTokens = (t, textTokens) => {
+  if (!t) return;
+  const cleaned = normalize(t.replace(/[.,;:!?()'’"«»\-]/g, " "));
+  cleaned
+    .split(/\s+/)
+    // AREMP x2 forEach
+    .filter((w) => w.length >= 3)
+    .forEach((w) => textTokens.add(w));
+}
+
 export const indexData = (data = getRecipes()) => {
   let index = {
     text: {},
     filters: {},
   };
-
+// AREMP- forEach
   data.forEach((recipe) => {
     let textTokens = new Set();
 
-    recipe.description
-      .replace(/[.,;:!?()]/g, "")
-      .split(/\s+/)
-      .filter((w) => w.length >= 3)
-      .forEach((w) => textTokens.add(w));
+      formatTokens(recipe.description, textTokens)
+      formatTokens(recipe.name, textTokens)
 
-    recipe.name
-      .split(/\s+/)
-      .filter((w) => w.length >= 3)
-      .forEach((w) => textTokens.add(w));
-
+// AREMP-forEach
     recipe.ingredients.forEach((part) => {
-      part.ingredient
-        .replace(/[.,;:!?()]/g, "")
-        .split(/\s+/)
-        .filter((w) => w.length >= 3)
-        .forEach((w) => textTokens.add(w));
+      formatTokens(part.ingredient, textTokens)
 
       // Indexer l'expression complète de l'ingrédient
       const fullIng = normalize(part.ingredient);
@@ -66,13 +62,14 @@ export const indexData = (data = getRecipes()) => {
 
     // Index ustensiles complets
     if (recipe.ustensils) {
+      // AREMP forEach
       recipe.ustensils.forEach((ust) => {
         const ustKey = normalize(ust);
         if (!index.filters[ustKey]) index.filters[ustKey] = [];
         index.filters[ustKey].push(recipe.id);
       });
     }
-
+      // AREMP forEach
     textTokens.forEach((token) => {
       if (!index.text[token]) index.text[token] = [];
       index.text[token].push(recipe.id);
