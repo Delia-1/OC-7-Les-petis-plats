@@ -1,6 +1,7 @@
 import {
   normalize,
   getRecipeIdsFromKeywords,
+  indexData,
 } from "../utils/getRecipies.js";
 import { ElementFactory } from "../factory/elementsFactory.js";
 import { updateSearch } from "./headerTemplate.js";
@@ -9,8 +10,8 @@ export const activeTags = new Set();
 
 let tagBaselineData = [];
 
-
-export const setTagBaseline = (data) => {  // set une seule fois (avant 1er tag)
+export const setTagBaseline = (data) => {
+  // set une seule fois (avant 1er tag)
   tagBaselineData = Array.isArray(data) ? data : [];
 };
 
@@ -49,7 +50,7 @@ export const filtersFirstRender = (data) => {
 };
 
 export function filtersUpdate(filteredRecipes) {
-  console.log("2 filtersUpdate ici", filteredRecipes)
+  console.log("2 filtersUpdate ici", filteredRecipes);
   filtersObj[0].items = getCategoryItems(filteredRecipes, "ingredients");
   filtersObj[1].items = getCategoryItems(filteredRecipes, "appliance");
   filtersObj[2].items = getCategoryItems(filteredRecipes, "ustensils");
@@ -89,14 +90,12 @@ export const displayAside = () => {
   return asideContainer.el;
 };
 
-
 export const displayTagList = () => {
-
-    const tagList = ElementFactory.create("ul", {
-    className: "tag-list d-flex gap-2"
-  })
-  return tagList.el
-}
+  const tagList = ElementFactory.create("ul", {
+    className: "tag-list d-flex gap-2",
+  });
+  return tagList.el;
+};
 
 export const displayLiFilters = (currentNode, item) => {
   const list = currentNode.querySelector(".item-list");
@@ -110,10 +109,9 @@ export const displayLiFilters = (currentNode, item) => {
   });
 };
 
-
 export const openFilter = () => {
   const aside = document.querySelector(".search-aside");
-  if (!aside || aside.dataset.toggleBound === "1") return; // idempotent par élément
+  if (!aside || aside.dataset.toggleBound === "1") return;
   aside.dataset.toggleBound = "1";
 
   aside.addEventListener("click", (e) => {
@@ -134,7 +132,7 @@ export const openFilter = () => {
   });
 };
 
-export const setupIngredientFilter = () => {
+export const setupIngredientFilter = (data, index) => {
   const inputIngredient = document.querySelectorAll(".search-input");
   inputIngredient.forEach((input) => {
     if (input.dataset.bound === "1") return;
@@ -155,8 +153,11 @@ export const setupIngredientFilter = () => {
       );
       newFilteredList.sort();
       list.innerHTML = "";
+      console.log("list", newFilteredList);
 
       displayLiFilters(list.closest(".div-filter"), { items: newFilteredList });
+
+      selectAndUpdate(data, index);
 
       return newFilteredList;
     });
@@ -164,82 +165,83 @@ export const setupIngredientFilter = () => {
 };
 
 export const selectAndUpdate = (data, index) => {
-  const inputs = document.querySelectorAll(".search-input");
-  inputs.forEach((input) => {
-    const list = input.parentElement.querySelector(".item-list");
+  const aside = document.querySelector(".search-aside");
+  if (!aside || aside.dataset.selectBound === 1) return;
+  aside.dataset.selectBound = "1";
 
-    const items = list.querySelectorAll("li");
-    items.forEach((item) => {
-      item.addEventListener("click", () => {
-        const label = item.innerHTML;
-        if (activeTags.size === 0) setTagBaseline(data);
-        displayTags(label)
-        recomputeFromTags(index)
-      });
-    });
+  aside.addEventListener("click", (e) => {
+    const li = e.target.closest(".list-item");
+    if (!li || !(li instanceof HTMLElement)) return;
+    const label = li.textContent.trim();
+    if (activeTags.size === 0)
+      setTagBaseline(Array.isArray(data) ? data : getTagBaseline());
+    displayTags(label);
+    recomputeFromTags(index);
   });
 };
 
 export const displayTags = (tagName) => {
-  const tagList = document.querySelector(".tag-list")
-
+  const tagList = document.querySelector(".tag-list");
 
   const key = normalize(tagName);
   if (activeTags.has(key)) return;
   activeTags.add(key);
 
-
-    const li = ElementFactory.create("li", {
-    className: "tag bg-yellow d-flex justify-content-between align-items-center text-dark",
+  const li = ElementFactory.create("li", {
+    className:
+      "tag bg-yellow d-flex justify-content-between align-items-center text-dark",
     text: tagName,
     dataset: { key },
-  })
-li.el.dataset.key = key;
+  });
+  li.el.dataset.key = key;
 
   const cutTag = ElementFactory.create("button", {
     className: "cut-tag",
     ariaLabel: `Retirer le filtre « ${tagName} »`,
-  })
+  });
 
   const close = ElementFactory.create("img", {
     className: " close-img",
     src: "assets/darkCrossIcon.svg",
-    alt: "supprimer le tag"
-  })
-  li.el.appendChild(cutTag.el)
-  cutTag.el.appendChild(close.el)
-  tagList.appendChild(li.el)
+    alt: "supprimer le tag",
+  });
+  li.el.appendChild(cutTag.el);
+  cutTag.el.appendChild(close.el);
+  tagList.appendChild(li.el);
 };
 
-const recomputeFromTags = ( index) =>{
+const recomputeFromTags = (index) => {
   const base = getTagBaseline();
-  const keywords = [ ...activeTags];
-    const ids = keywords.length
-    ? getRecipeIdsFromKeywords(keywords, index.filters)
-    : base.map(r => r.id);
-    updateSearch(ids, base, index)
+  const safeIndex =
+    index && index.filters
+      ? index
+      : indexData(Array.isArray(base) ? base : getTagBaseline());
+      
+  const keywords = [...activeTags];
+  const ids = keywords.length
+    ? getRecipeIdsFromKeywords(keywords, safeIndex.filters)
+    : base.map((r) => r.id);
+  updateSearch(ids, base, safeIndex);
+};
 
-}
-
-
-export const bindTagBar = ( index) => {
+export const bindTagBar = (index) => {
   const tagList = document.querySelector(".tag-list");
   if (!tagList || tagList.dataset.bound === "1") return;
-  tagList.dataset.bound = "1"
+  tagList.dataset.bound = "1";
 
   tagList.addEventListener("click", (e) => {
-    const btn = e.target.closest(".cut-tag")
+    const btn = e.target.closest(".cut-tag");
     if (!btn) return;
-    const tag = btn.closest(".tag")
-    const key = tag?.dataset?.key
+    const tag = btn.closest(".tag");
+    const key = tag?.dataset?.key;
 
-    if(!key) return
-    console.log("clicked")
+    if (!key) return;
+    console.log("clicked");
     activeTags.delete(key);
     tag.remove();
-    recomputeFromTags(index)
-  })
-}
+    recomputeFromTags(index);
+  });
+};
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {
