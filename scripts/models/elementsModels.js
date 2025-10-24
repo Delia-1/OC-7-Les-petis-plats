@@ -175,8 +175,11 @@ export class InputElement {
     this.el = document.createElement("input");
     this.el.className = options.className || "";
     this.el.textContent = options.text || "";
+    this.el.id = options.id || "";
     if (options.ariaLabel)
       this.el.setAttribute("aria-label", options.ariaLabel);
+    if (options.placeholder)
+      this.el.setAttribute("placeholder", options.placeholder);
     if (options.ariaAutoComplete)
       this.el.setAttribute("aria-auto-ccomplete", options.ariaAutoComplete);
   }

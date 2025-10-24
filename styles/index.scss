@@ -31,6 +31,7 @@ header {
 
 .search-bar {
   border-radius: 11px;
+  max-width: 66vw;
 
   &--input {
     width: 62vw;
@@ -55,10 +56,19 @@ header {
   }
 }
 
+.search-aside {
+  padding: 2.5vh 7vw;
+}
+
 .div-filter {
-  // width: fit-content;
-  height: 60px;
+  height: 56px;
   border-radius: 11px;
+}
+
+.search-aside {
+  .div-filter + .div-filter {
+    margin-left: 4vw;
+  }
 }
 
 .list-container {
@@ -69,13 +79,13 @@ header {
 }
 
 .filter-header {
-  width: 195px;
-  height: 56px;
+  width: 13.5vw ;
+  height: 6.5vh;
 }
 
 .filterName {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .search-input {
@@ -95,6 +105,7 @@ height: 36px;
 .count-div {
   right: 100px;
   align-self: center;
+  top: 5vh;
 }
 
 .count-text {
@@ -107,8 +118,9 @@ height: 36px;
 
 .tag-list {
   list-style: none;
-  padding-left: 1.5rem;
+  padding-left: 7vw;
 }
+
 .close-img {
   width: 10px;
 }
@@ -116,12 +128,11 @@ height: 36px;
 .tag {
   width: min-content;
   padding: 18px;
-  width: 15.5vw ;
+  width: 13.5vw ;
   height: 6.5vh;
   border-radius: 11px;
   font-size: 14px;
-  font-weight: 400;
-
+  font-weight: 500;
 }
 
 .cut-tag {
@@ -133,7 +144,7 @@ height: 36px;
 main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: 14vh 6vw 0 6vw;
+  padding: 2vh 6vw 0 6vw;
   grid-gap: 7vh 1vw;
   place-items: center;
 }

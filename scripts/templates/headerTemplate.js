@@ -92,7 +92,7 @@ export const headerTemplate = () => {
   });
 
   const homepageLink = ElementFactory.create("a", {
-    className: "position-absolute top-0 start-0 ps-4 m-5",
+    className: "position-absolute top-0 start-0 mt-5",
     href: "index.html",
     ariaLabel: "Retourner à la page d'accueil",
   });
@@ -108,7 +108,7 @@ export const headerTemplate = () => {
   });
 
   const title = ElementFactory.create("h1", {
-    className: "lh-base header--title text-yellow text-center mt-4 pt-5",
+    className: "lh-base header--title text-yellow text-center mt-2 pt-5",
   });
   title.el.innerHTML =
     "CHERCHEZ PARMI PLUS DE 1500 RECETTES<br>DU QUOTIDIEN,SIMPLES ET DÉLICIEUSES ";

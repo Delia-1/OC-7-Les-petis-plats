@@ -216,7 +216,6 @@ const recomputeFromTags = (index) => {
     index && index.filters
       ? index
       : indexData(Array.isArray(base) ? base : getTagBaseline());
-      
   const keywords = [...activeTags];
   const ids = keywords.length
     ? getRecipeIdsFromKeywords(keywords, safeIndex.filters)
@@ -245,7 +244,7 @@ export const bindTagBar = (index) => {
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {
-    className: "div-filter m-4 bg-light d-flex flex-column ",
+    className: "div-filter bg-light d-flex flex-column ",
     ariaExpended: "true",
     dataKey: "",
   });
