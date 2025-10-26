@@ -25,6 +25,8 @@ export const getRightRecipes = (data, index) => {
   isHeaderSearchBound = true;
 
   const searchBtn = document.querySelector(".search-bar--btn");
+  const userInput = document.querySelector(".search-bar--input")
+  handleSearchInput(userInput)
 
   searchBtn.addEventListener("click", (e) => {
  e.preventDefault();
@@ -57,6 +59,28 @@ export const getRightRecipes = (data, index) => {
       updateSearch(uniq, data, index);
     }
 
+};
+
+export const handleSearchInput = (input) => {
+  const searchBtn = document.querySelector(".search-bar--cancel");
+  const cancelInput = document.querySelector('.cross-icon')
+  // const inputValue = document.querySelector("")
+  if (input < 3 || !(input instanceof HTMLElement)) return;
+  crossIcon.classList.remove("d-none")
+
+  searchBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    input.value === ""
+  })
+  // const cut = wrapper ? wrapper.querySelector(".cut-input") : input.parentElement?.querySelector(".cut-input");
+  // const hasValue = input.value && input.value.trim().length > 0;
+
+  // if (cut) {
+  //   cut.classList.toggle("d-none", !hasValue);
+  // }
+  // if (wrapper) {
+  //   wrapper.classList.toggle("has-value", hasValue);
+  // }
 };
 
 export const updateSearch = (uniq, data, index) => {
@@ -151,7 +175,7 @@ export const headerTemplate = () => {
   });
 
   const crossIcon = ElementFactory.create("img", {
-    className: "dropdown-icon ms-5 ps-3",
+    className: "cross-icon ms-5 ps-3 d-none",
     src: "assets/cross-icon.svg",
     alt: "icon fermer",
   });

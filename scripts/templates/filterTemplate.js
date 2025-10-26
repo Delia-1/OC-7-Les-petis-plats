@@ -80,9 +80,10 @@ export const displayAside = () => {
   filtersObj.forEach((item) => {
     const currentNode = filterSectionTemplate(item);
     const filterName = currentNode.querySelector(".filterName");
-
+    const searchInput = currentNode.querySelector(".search-input")
     currentNode.dataset.key = item.id;
     filterName.textContent = item.id;
+    searchInput.id = item.id;
     asideContainer.el.appendChild(currentNode);
     displayLiFilters(currentNode, item);
   });
@@ -103,7 +104,7 @@ export const displayLiFilters = (currentNode, item) => {
     const li = ElementFactory.create("li", {
       id: normalize(item),
       text: item,
-      className: "list-item",
+      className: "list-item ps-3 pt-2",
     });
     list.appendChild(li.el);
   });
@@ -137,31 +138,57 @@ export const setupIngredientFilter = (data, index) => {
   inputIngredient.forEach((input) => {
     if (input.dataset.bound === "1") return;
     input.dataset.bound = "1";
+       const root = input.closest(".div-filter");
+   if (!input || !root) return;
+   const list = root.querySelector(".item-list");
+   if (!list) return;
 
-    const list = input.parentElement.querySelector(".item-list");
-    if (!input || !list) return;
+       const items = list.querySelectorAll("li");
+    const fullList = [];
+    items.forEach((item) => fullList.push(item.innerHTML));
+    root._fullList = fullList.slice();
 
-    let filteredList = [];
-    const items = list.querySelectorAll("li");
-    items.forEach((item) => {
-      filteredList.push(item.innerHTML);
-    });
+      const cutInputEl = root.querySelector(".cut-input");
+    if (cutInputEl && !cutInputEl.dataset.bound) {
+      cutInputEl.dataset.bound = "1";
+      cutInputEl.addEventListener("click", (e) => {
+        e.preventDefault();
+        input.value = "";
+        // trigger the input handler so it re-renders the full list and updates filters
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.focus();
+      });
+    }
 
-    input.addEventListener("keyup", (e) => {
-      const newFilteredList = filteredList.filter((item) =>
+    input.addEventListener("input", (e) => {
+      handleFilterInput(input)
+      const source = root._fullList || fullList;
+      const newFilteredList = source.filter((item) =>
         normalize(item).includes(normalize(input.value))
       );
       newFilteredList.sort();
       list.innerHTML = "";
-      console.log("list", newFilteredList);
 
-      displayLiFilters(list.closest(".div-filter"), { items: newFilteredList });
-
+      displayLiFilters(root, { items: newFilteredList });
       selectAndUpdate(data, index);
 
       return newFilteredList;
     });
   });
+};
+
+export const handleFilterInput = (input) => {
+  if (!input || !(input instanceof HTMLElement)) return;
+  const wrapper = input.closest(".search-input-wrapper");
+  const cut = wrapper ? wrapper.querySelector(".cut-input") : input.parentElement?.querySelector(".cut-input");
+  const hasValue = input.value && input.value.trim().length > 0;
+
+  if (cut) {
+    cut.classList.toggle("d-none", !hasValue);
+  }
+  if (wrapper) {
+    wrapper.classList.toggle("has-value", hasValue);
+  }
 };
 
 export const selectAndUpdate = (data, index) => {
@@ -235,7 +262,6 @@ export const bindTagBar = (index) => {
     const key = tag?.dataset?.key;
 
     if (!key) return;
-    console.log("clicked");
     activeTags.delete(key);
     tag.remove();
     recomputeFromTags(index);
@@ -244,13 +270,13 @@ export const bindTagBar = (index) => {
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {
-    className: "div-filter bg-light d-flex flex-column ",
+    className: "div-filter bg-white d-flex flex-column ",
     ariaExpended: "true",
     dataKey: "",
   });
 
   const divFilterHeader = ElementFactory.create("div", {
-    className: "filter-header d-flex justify-content-center align-items-center",
+    className: "filter-header d-flex justify-content-center align-items-center pt-2",
   });
 
   const filterName = ElementFactory.create("p", {
@@ -267,24 +293,35 @@ export const filterSectionTemplate = () => {
       "div-filter--content  d-flex flex-column justify-content-center align-items-stretch d-none",
   });
   const listContainer = ElementFactory.create("div", {
-    className: "list-container mb-1",
+    className: "list-container mb-1 ",
+  });
+    const searchWrapper = ElementFactory.create("div", {
+    className: "search-input-wrapper  d-flex position-relative justify-content-center align-items-stretch",
   });
 
   const searchInput = ElementFactory.create("input", {
-    className: "search-input mb-1 mx-auto",
+    className: "search-input mb-1 mx-auto p-2 text-grey",
     ariaAutoComplete: "list",
   });
 
+    const cutInput = ElementFactory.create("img", {
+    className: "cut-input position-absolute text-grey d-none",
+    src: "assets/cross-icon.svg",
+    alt: "supprimer l'entrée",
+  });
+
   const itemList = ElementFactory.create("ul", {
-    className: "item-list",
+    className: "item-list ps-0 pt-3",
   });
 
   divFilter.el.appendChild(divFilterHeader.el);
   divFilterHeader.el.appendChild(filterName.el);
   divFilterHeader.el.appendChild(dropdownnIcon.el);
   divFilter.el.appendChild(divFilterContent.el);
-  divFilterContent.el.appendChild(searchInput.el);
-  divFilterContent.el.appendChild(itemList.el);
+  divFilterContent.el.appendChild(searchWrapper.el);
+  searchWrapper.el.appendChild(searchInput.el);
+  searchWrapper.el.appendChild(cutInput.el);
+  // divFilterContent.el.appendChild(itemList.el);
   divFilterContent.el.appendChild(listContainer.el);
   listContainer.el.appendChild(itemList.el);
 

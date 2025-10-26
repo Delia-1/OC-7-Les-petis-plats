@@ -4,6 +4,10 @@
     sans-serif;
 }
 
+*:focus {
+  outline: none
+}
+
 h1, h2, h3 {
   font-family: var(--font-title);
 }
@@ -52,7 +56,7 @@ header {
   }
   &--cancel {
     border: none;
-    visibility: hidden;
+    // visibility: hidden;
   }
 }
 
@@ -88,13 +92,41 @@ header {
   font-weight: 600;
 }
 
+
 .search-input {
-width: 163px;
-height: 36px;
+  background-image: url("../assets/loupe-icon-grey.svg"),;
+  background-repeat: no-repeat;
+  background-position:  right 10px center;
+  background-size:14.5px 14px;
+  padding-right: 36px;
+  border: 1px solid $light-grey;
+  width: 163px;
+  height: 36px;
+  border-radius: 2px;
+}
+
+.cut-input {
+  top: 16px;
+  right: 46px;
+  width: 6px;
 }
 
 .item-list {
   list-style: none;
+}
+
+.list-item {
+  height: 37px;
+  font-size: 14px;
+  font-weight: 500;
+  // margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.list-item:hover {
+  background-color: $yellow;
+  // outline: 3px solid $yellow;
+  // outline-offset: 2px;
 }
 
 .open {
