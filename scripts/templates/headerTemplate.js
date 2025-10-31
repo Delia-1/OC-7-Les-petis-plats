@@ -18,6 +18,9 @@ export const displayHeader = () => {
   return header;
 };
 
+
+
+
 let isHeaderSearchBound = false;
 // OUI A TRANSFORMER
 export const getRightRecipes = (data, index) => {
@@ -25,8 +28,6 @@ export const getRightRecipes = (data, index) => {
   isHeaderSearchBound = true;
 
   const searchBtn = document.querySelector(".search-bar--btn");
-  const userInput = document.querySelector(".search-bar--input")
-  handleSearchInput(userInput)
 
   searchBtn.addEventListener("click", (e) => {
  e.preventDefault();
@@ -48,44 +49,59 @@ export const getRightRecipes = (data, index) => {
 
       const rightIndex = index.text;
       const normalizedInput = normalize(inputUser);
-      let allIds = [];
+      let allIds = new Set();
       // AREMP-forEach
-      Object.entries(rightIndex).forEach(([word, ids]) => {
-        if (word.startsWith(normalizedInput)) allIds.push(...ids);
-      });
-      const uniq = [...new Set(allIds)];
-      console.log("uniq", uniq)
+  Object.keys(rightIndex)
+    .filter(word => word.startsWith(normalizedInput)) // <-- return fixed
+    .forEach(word => {
+      rightIndex[word].forEach(id => allIds.add(id));
+    });
 
-      updateSearch(uniq, data, index);
+      // Object.entries(rightIndex).forEach(([word, ids]) => {
+      //   if (word.startsWith(normalizedInput)) allIds.push(...ids);
+      // });
+      // const uniq = [...new Set(allIds)];
+      console.log("allIds", allIds)
+
+      updateSearch(allIds, data, index);
     }
 
 };
+// ...existing code...
+export const handleSearchInput = () => {
+  const cancelBtn = document.querySelector(".search-bar--cancel");
+  const inputEl = document.querySelector('.search-bar--input');
 
-export const handleSearchInput = (input) => {
-  const searchBtn = document.querySelector(".search-bar--cancel");
-  const cancelInput = document.querySelector('.cross-icon')
-  // const inputValue = document.querySelector("")
-  if (input < 3 || !(input instanceof HTMLElement)) return;
-  crossIcon.classList.remove("d-none")
+  if (!cancelBtn || !inputEl) return;
 
-  searchBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    input.value === ""
-  })
-  // const cut = wrapper ? wrapper.querySelector(".cut-input") : input.parentElement?.querySelector(".cut-input");
-  // const hasValue = input.value && input.value.trim().length > 0;
+  // afficher/masquer au chargement
+  cancelBtn.classList.toggle("d-none", inputEl.value.trim() === "");
 
-  // if (cut) {
-  //   cut.classList.toggle("d-none", !hasValue);
-  // }
-  // if (wrapper) {
-  //   wrapper.classList.toggle("has-value", hasValue);
-  // }
+  // montrer/masquer au fur et à mesure de la saisie
+  inputEl.addEventListener("input", () => {
+    cancelBtn.classList.toggle("d-none", inputEl.value.trim() === "");
+  });
+
+  // attacher le click une seule fois
+  if (!cancelBtn.dataset.bound) {
+    cancelBtn.dataset.bound = "1";
+    cancelBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      inputEl.value = "";
+      // déclenche le handler "input" (mise à jour des filtres / UI)
+      inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+      cancelBtn.classList.add("d-none");
+      inputEl.focus();
+    });
+  }
 };
 
 export const updateSearch = (uniq, data, index) => {
   // AREMP filter
-  const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
+  const uniqIsSet = uniq instanceof Set;
+  const filteredData = data.filter((recipe) =>
+    uniqIsSet ? uniq.has(recipe.id) : uniq.includes(recipe.id)
+  );
 
   filtersUpdate(filteredData);
 
@@ -170,12 +186,12 @@ export const headerTemplate = () => {
   });
 
   const searchBarCancel = ElementFactory.create("button", {
-    className: "search-bar--cancel bg-light",
+    className: "search-bar--cancel bg-light d-none",
     ariaLabel: "Supprimer recherche",
   });
 
   const crossIcon = ElementFactory.create("img", {
-    className: "cross-icon ms-5 ps-3 d-none",
+    className: "cross-icon ms-5 ps-3 ",
     src: "assets/cross-icon.svg",
     alt: "icon fermer",
   });

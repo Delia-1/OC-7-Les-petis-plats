@@ -1,14 +1,14 @@
 import {getRecipes, indexData, countData }from "../utils/getRecipies.js";
 import { displayMain } from "../templates/cardsTemplate.js";
 import { displayAside, displayTagList, filtersFirstRender,  openFilter, selectAndUpdate,  setupIngredientFilter, bindTagBar } from "../templates/filterTemplate.js";
-import { displayHeader } from "../templates/headerTemplate.js";
+import { displayHeader, handleSearchInput } from "../templates/headerTemplate.js";
 import { getRightRecipes} from "../templates/headerTemplate.js";
 
 const recipeData = getRecipes()
 const body = document.querySelector("body")
 const index = indexData()
 body.appendChild(displayHeader())
-
+handleSearchInput()
 
 filtersFirstRender(recipeData)
 const asideEl = displayAside()
