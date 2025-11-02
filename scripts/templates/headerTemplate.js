@@ -9,7 +9,7 @@ import {
   bindTagBar,
   openFilter,
   setTagBaseline,
-  activeTags
+  activeTags,
 } from "./filterTemplate.js";
 
 export const displayHeader = () => {
@@ -27,68 +27,59 @@ export const getRightRecipes = (data, index) => {
   const searchBtn = document.querySelector(".search-bar--btn");
 
   searchBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    getRightRecipesLaunched();
+  });
+  searchBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
       e.preventDefault();
-    getRightRecipesLaunched()
+      getRightRecipesLaunched();
+    }
   });
-    searchBtn.addEventListener("keydown", (e) => {
-      if(e.key === "Enter") {
-          e.preventDefault();
-        getRightRecipesLaunched()
-      }
-  });
-
 
   const getRightRecipesLaunched = () => {
-      const inputUser = document.querySelector(".search-bar--input").value;
-      if (inputUser.length < 3) return;
+    const inputUser = document.querySelector(".search-bar--input").value;
+    if (inputUser.length < 3) return [];
 
-      const rightIndex = index.text;
-      const normalizedInput = normalize(inputUser);
-      let allIds = [];
+    const rightIndex = index.text;
+    const normalizedInput = normalize(inputUser);
+    const allIds = new Set();
+    const keys = Object.keys(rightIndex);
 
-      // Object.entries(rightIndex).forEach(([word, ids]) => {
-        //   if (word.startsWith(normalizedInput)) allIds.push(...ids);
-        // });
-
-        // REMP-forEach
-      const entries = Object.entries(rightIndex)
-      for (let i = 0; i < entries.length; i++) {
-        const pair = entries[i]// toute l'entrée
-        const word = pair[0]//Le mot associé
-        const ids = pair[1]//L'ids associés
-        if (word.startsWith(normalizedInput)) {
-          for (let j = 0; j < ids.length ; j++) {
-            allIds.push(ids[j])
-          }
+    for (let i = 0; i < keys.length; i++) {
+      const word = keys[i];
+      if (word.startsWith(normalizedInput)) {
+        const ids = rightIndex[word];
+        for (let j = 0; j < ids.length; j++) {
+          allIds.add(ids[j]);
         }
       }
-      const uniq = [...new Set(allIds)];
-      console.log("uniq", uniq)
-
-      updateSearch(uniq, data, index);
     }
+    const uniq = [...allIds];
+    console.log("uniq", uniq);
 
+    updateSearch(uniq, data, index);
+  };
 };
 
 export const updateSearch = (uniq, data, index) => {
-  // const filteredData = data.filter((recipe) => uniq.includes(recipe.id));
-  
+
   // REMP filter
-  const uniqSet = new Set(uniq)
+  const uniqSet = new Set(uniq);
   const filteredData = [];
-  for ( const recipe of data) {
+  for (const recipe of data) {
     if (uniqSet.has(recipe.id)) filteredData.push(recipe);
   }
 
   filtersUpdate(filteredData);
 
   const oldAside = document.querySelector(".search-aside");
-  const tagList = document.querySelector(".tag-list")
+  const tagList = document.querySelector(".tag-list");
   const parent = oldAside?.parentElement;
 
-   if (oldAside) oldAside.remove();
- const newAside = displayAside();
-   if (parent) {
+  if (oldAside) oldAside.remove();
+  const newAside = displayAside();
+  if (parent) {
     if (tagList && tagList.parentElement === parent) {
       parent.insertBefore(newAside, tagList);
     } else {
@@ -96,23 +87,25 @@ export const updateSearch = (uniq, data, index) => {
     }
   }
 
-  openFilter()
+  openFilter();
   setupIngredientFilter();
   selectAndUpdate(filteredData, index);
-  bindTagBar( index);
+  bindTagBar(index);
 
   let main = document.querySelector("main");
-   if (!main) { main = document.createElement("main"); document.body.appendChild(main); }
+  if (!main) {
+    main = document.createElement("main");
+    document.body.appendChild(main);
+  }
   main.innerHTML = "";
 
   main.appendChild(displayMain(filteredData));
 
+  countData(filteredData);
 
-  countData(filteredData)
-
-   if (activeTags.size === 0) {
-   setTagBaseline(filteredData);
- }
+  if (activeTags.size === 0) {
+    setTagBaseline(filteredData);
+  }
 };
 
 export const headerTemplate = () => {
