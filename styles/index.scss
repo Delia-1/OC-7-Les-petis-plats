@@ -30,7 +30,6 @@ header {
   background-position: center;
 }
 
-
 .header--title {
   font-size: 44px;
 }
@@ -100,6 +99,10 @@ header {
 .filter-header {
   width: 13.5vw;
   height: 6.5vh;
+
+  @media (max-width: 900px) {
+    width: 50%;
+  }
 }
 
 .filterName {
@@ -191,20 +194,32 @@ main {
   padding: 2vh 6vw 0 6vw;
   grid-gap: 7vh 1vw;
   place-items: center;
+
+  @media (max-width: 1000px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .recipe-card {
-  width: 380px;
+  width: 26.5vw;
   border-radius: 21px;
   height: fit-content;
   box-shadow: 0px 4px 34px 30px rgba(0, 0, 0, 0.04);
+
+  @media (max-width: 1000px) {
+    width: 43vw;
+  }
 }
 
 .recipe-image {
-  width: 380px;
+  width: 26.5vw;
   height: 253px;
   object-fit: cover;
   border-radius: 21px 21px 0 0;
+
+  @media (max-width: 1000px) {
+    width: 43vw;
+  }
 }
 
 .time-tag {

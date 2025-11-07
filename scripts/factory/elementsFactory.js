@@ -18,15 +18,14 @@ import {
   InputElement,
   ListElement,
   ItemElement,
-} from '../models/elementsModels.js';
-
+} from "../models/elementsModels.js";
 
 export class ElementFactory {
-  static create(elementType, options={}) {
+  static create(elementType, options = {}) {
     switch (elementType) {
       case "article":
         return new ArticleElement(options);
-       case "header":
+      case "header":
         return new HeaderElement(options);
       case "div":
         return new DivElement(options);
@@ -37,8 +36,8 @@ export class ElementFactory {
       case "h3":
         return new HeadingElement(elementType, options);
       case "textarea":
-        return new TextareaElement( options)
-      case 'p':
+        return new TextareaElement(options);
+      case "p":
         return new ParagraphElement(options);
       case "img":
         return new ImageElement(options);
@@ -46,7 +45,7 @@ export class ElementFactory {
         return new VideoElement(options);
       case "form":
         return new FormElement(options);
-      case 'label':
+      case "label":
         return new LabelElement(options);
       case "a":
         return new LinkElement(options);
@@ -59,7 +58,7 @@ export class ElementFactory {
       case "input":
         return new InputElement(options);
       case "aside":
-        return new AsideElement(options)
+        return new AsideElement(options);
       case "span":
         return new SpanElement(options);
       case "br":

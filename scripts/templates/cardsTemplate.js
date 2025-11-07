@@ -1,31 +1,24 @@
 import { ElementFactory } from "../factory/elementsFactory.js";
 import { openFilter } from "./filterTemplate.js";
 
-
-
-export const displayMain =  (data) => {
-
+export const displayMain = (data) => {
   const main = document.createElement("main");
   main.classList.add("z-2");
-  data.forEach(recipe => {
+  data.forEach((recipe) => {
     main.appendChild(cardTemplate(recipe));
   });
 
-openFilter()
-return main
-}
-
-
+  openFilter();
+  return main;
+};
 
 export const ingredientsTemplate = (recipe) => {
   return recipe.ingredients.map((currentIngredient) => {
     const { ingredient, quantity, unit } = currentIngredient;
     const formatText = () => {
-     if (!quantity) return;
+      if (!quantity) return;
 
-      return (quantity && unit )
-      ?`${quantity}` + ` ${unit}`
-      :`${quantity}`;
+      return quantity && unit ? `${quantity}` + ` ${unit}` : `${quantity}`;
     };
     const item = ElementFactory.create("li", {
       className: "list--item text-dark",
@@ -58,14 +51,14 @@ export const cardTemplate = (recipe) => {
   });
 
   const timeTag = ElementFactory.create("div", {
-    className: "time-tag rounded-pill bg-yellow position-absolute text-dark d-flex align-items-center justify-content-center",
+    className:
+      "time-tag rounded-pill bg-yellow position-absolute text-dark d-flex align-items-center justify-content-center",
     text: `${time}min`,
-  })
+  });
 
   const recipeContainer = ElementFactory.create("div", {
     className: "recipe-container p-4 pb-2",
   });
-
 
   const recipeTitle = ElementFactory.create("h2", {
     className: "recipe-container--title text-dark py-2 m-0",
@@ -81,10 +74,10 @@ export const cardTemplate = (recipe) => {
     text: description,
   });
 
-    const list = ElementFactory.create("ul", {
+  const list = ElementFactory.create("ul", {
     className: "list p-2 mb-5",
   });
-    const ingredientsSubtitle = ElementFactory.create("p", {
+  const ingredientsSubtitle = ElementFactory.create("p", {
     className: "recipe-container--ingredients text-grey pt-3 m-0 ",
     text: "INGREDIENTS",
   });
@@ -94,14 +87,14 @@ export const cardTemplate = (recipe) => {
   });
 
   card.el.appendChild(imgWrapper.el);
-  card.el.appendChild(timeTag.el)
+  card.el.appendChild(timeTag.el);
   imgWrapper.el.appendChild(recipeImage.el);
 
-  card.el.appendChild(recipeContainer.el)
+  card.el.appendChild(recipeContainer.el);
   recipeContainer.el.appendChild(recipeTitle.el);
   recipeContainer.el.appendChild(recetteSubtitle.el);
   recipeContainer.el.appendChild(instructions.el);
-  recipeContainer.el.appendChild(ingredientsSubtitle.el)
+  recipeContainer.el.appendChild(ingredientsSubtitle.el);
 
   recipeContainer.el.appendChild(list.el);
 

@@ -135,8 +135,7 @@ export class ButtonElement {
     this.el.textContent = options.textContent;
     if (options.ariaLabel)
       this.el.setAttribute("aria-label", options.ariaLabel);
-        if (options.type)
-      this.el.setAttribute("type", options.type);
+    if (options.type) this.el.setAttribute("type", options.type);
     if (options.ariaHaspopup)
       this.el.setAttribute("aria-haspopup", options.ariaHaspopup);
     if (options.ariaExpanded)
@@ -193,13 +192,13 @@ export class ItemElement {
     this.el.id = options.id || "";
     this.el.className = options.className || "";
     this.el.textContent = options.text || "";
-     if (options.dataset && typeof options.dataset === "object") {
-     for (const [k, v] of Object.entries(options.dataset)) {
-       if (v !== undefined && v !== null) {
-         this.el.dataset[k] = String(v);
-       }
-     }
-   }
+    if (options.dataset && typeof options.dataset === "object") {
+      for (const [k, v] of Object.entries(options.dataset)) {
+        if (v !== undefined && v !== null) {
+          this.el.dataset[k] = String(v);
+        }
+      }
+    }
   }
 }
 
