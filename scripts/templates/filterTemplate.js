@@ -11,7 +11,6 @@ export const activeTags = new Set();
 let tagBaselineData = [];
 
 export const setTagBaseline = (data) => {
-  // set une seule fois (avant 1er tag)
   tagBaselineData = Array.isArray(data) ? data : [];
 };
 
@@ -50,7 +49,6 @@ export const filtersFirstRender = (data) => {
 };
 
 export function filtersUpdate(filteredRecipes) {
-  console.log("2 filtersUpdate ici", filteredRecipes);
   filtersObj[0].items = getCategoryItems(filteredRecipes, "ingredients");
   filtersObj[1].items = getCategoryItems(filteredRecipes, "appliance");
   filtersObj[2].items = getCategoryItems(filteredRecipes, "ustensils");
@@ -123,13 +121,13 @@ export const openFilter = () => {
     const content = root.querySelector(".div-filter--content");
     const dropdown = root.querySelector(".dropdown-icon");
 
-    const open = !root.classList.contains("open");
-    root.classList.toggle("open", open);
-    content.classList.toggle("d-none", !open);
+    const isOpen = !content.classList.contains("d-none");
+    content.classList.toggle("d-none", isOpen);
+    root.classList.toggle("dropdown-open", !isOpen);
     if (dropdown)
-      dropdown.src = open
-        ? "assets/dropdown-open.svg"
-        : "assets/dropdown-close.svg";
+      dropdown.src = isOpen
+        ? "assets/dropdown-close.svg"
+        : "assets/dropdown-open.svg";
   });
 };
 
@@ -154,7 +152,6 @@ export const setupIngredientFilter = (data, index) => {
       cutInputEl.addEventListener("click", (e) => {
         e.preventDefault();
         input.value = "";
-        // trigger the input handler so it re-renders the full list and updates filters
         input.dispatchEvent(new Event("input", { bubbles: true }));
         input.focus();
       });
@@ -270,7 +267,7 @@ export const bindTagBar = (index) => {
 
 export const filterSectionTemplate = () => {
   const divFilter = ElementFactory.create("div", {
-    className: "div-filter bg-white d-flex flex-column ",
+    className: "div-filter bg-white d-flex flex-column position-relative",
     ariaExpended: "true",
     dataKey: "",
   });
@@ -290,7 +287,7 @@ export const filterSectionTemplate = () => {
   });
   const divFilterContent = ElementFactory.create("div", {
     className:
-      "div-filter--content  d-flex flex-column justify-content-center align-items-stretch d-none",
+      "div-filter--content  d-flex flex-column justify-content-center align-items-stretch d-none position-absolute",
   });
   const listContainer = ElementFactory.create("div", {
     className: "list-container mb-1 ",
@@ -321,7 +318,6 @@ export const filterSectionTemplate = () => {
   divFilterContent.el.appendChild(searchWrapper.el);
   searchWrapper.el.appendChild(searchInput.el);
   searchWrapper.el.appendChild(cutInput.el);
-  // divFilterContent.el.appendChild(itemList.el);
   divFilterContent.el.appendChild(listContainer.el);
   listContainer.el.appendChild(itemList.el);
 

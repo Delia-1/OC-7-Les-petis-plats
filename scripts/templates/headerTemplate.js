@@ -45,15 +45,6 @@ export const getRightRecipesLaunched = (data, index, e) => {
   }
   const uniq = [...allIds];
 
-
-  // for (const word in rightIndex) {
-  //   if (!Object.prototype.hasOwnProperty.call(rightIndex, word)) continue;
-  //   if (word.startsWith(normalizedInput)) {
-  //     const ids = rightIndex[word];
-  //     for (let k = 0; k < ids.length; k++) allIds.add(ids[k]);
-  //   }
-  // }
-
   updateSearch(uniq, data, index);
 };
 
@@ -66,22 +57,19 @@ export const getRightRecipes = (data, index) => {
 
   const searchBtn = document.querySelector(".search-bar--btn");
   const inputUser = document.querySelector(".search-bar--input");
-  console.log(inputUser.value);
-  inputUser.addEventListener("input", () => {
+
+  inputUser.addEventListener("input", (e) => {
     if (inputUser.value.length < 3) return;
     getRightRecipesLaunched(data, index);
   });
 
-  // clic sur bouton de recherche -> lancer même si <3 (ou forcer comportement)
   if (searchBtn) {
-    // éviter comportement submit si bouton dans un form
     searchBtn.type = searchBtn.type || "button";
     searchBtn.addEventListener("click", (e) => {
       e.preventDefault();
       getRightRecipesLaunched(data, index, e);
     });
 
-    // support Enter sur le bouton
     searchBtn.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -120,7 +108,6 @@ export const handleSearchInput = () => {
 
 export const updateSearch = (uniq, data, index) => {
 
-  // REMP filter
   const uniqSet = new Set(uniq);
   const filteredData = [];
   for (const recipe of data) {

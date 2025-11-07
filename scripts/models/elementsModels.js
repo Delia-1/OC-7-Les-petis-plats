@@ -196,7 +196,7 @@ export class ItemElement {
      if (options.dataset && typeof options.dataset === "object") {
      for (const [k, v] of Object.entries(options.dataset)) {
        if (v !== undefined && v !== null) {
-         this.el.dataset[k] = String(v); // => data-key="citron"
+         this.el.dataset[k] = String(v);
        }
      }
    }
