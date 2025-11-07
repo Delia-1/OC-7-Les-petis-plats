@@ -1,3 +1,5 @@
+import recipes from "../../data/recipes.js"
+
 export const getRecipes = () => {
   const data = recipes;
   return data;
@@ -22,7 +24,7 @@ export function normalize(s) {
 
 export const formatTokens = (t, textTokens) => {
   if (!t) return;
-  const cleaned = normalize(t.replace(/[.,;:!?()'’"«»\-]/g, " "));
+  const cleaned = normalize(t.replace(/[.,;:!?()'’"«»-]/g, " "));
   cleaned
     .split(/\s+/)
     .filter((w) => w.length >= 3)

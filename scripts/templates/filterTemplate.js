@@ -157,7 +157,7 @@ export const setupIngredientFilter = (data, index) => {
       });
     }
 
-    input.addEventListener("input", (e) => {
+    input.addEventListener("input", () => {
       handleFilterInput(input);
       const source = root._fullList || fullList;
       const newFilteredList = source.filter((item) =>
