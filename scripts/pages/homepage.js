@@ -28,6 +28,5 @@ getRightRecipes(recipeData, index)
 body.appendChild(displayMain(recipeData))
 countData(recipeData)
 
-// baseline initiale = toutes les recettes (aucune recherche / aucun tag)
 import { setTagBaseline } from "../templates/filterTemplate.js";
 setTagBaseline(recipeData);

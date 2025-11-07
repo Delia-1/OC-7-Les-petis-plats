@@ -39,8 +39,6 @@ export const getRightRecipesLaunched = (data, index, e) => {
       rightIndex[word].forEach((id) => allIds.add(id));
     });
 
-  console.log("allIds", allIds);
-
   updateSearch(allIds, data, index);
 };
 
@@ -53,7 +51,6 @@ export const getRightRecipes = (data, index) => {
 
   const searchBtn = document.querySelector(".search-bar--btn");
   const inputUser = document.querySelector(".search-bar--input");
-  console.log(inputUser.value);
 
   inputUser.addEventListener("input", (e) => {
     if (inputUser.value.length < 3) return;

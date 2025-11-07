@@ -5,13 +5,18 @@
 }
 
 *:focus {
-  outline: none
+  outline: none;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-title);
 }
-P, li, input, div {
+P,
+li,
+input,
+div {
   font-family: var(--font-text);
 }
 
@@ -19,15 +24,12 @@ P, li, input, div {
   object-fit: cover;
 }
 header {
-  // min-height: 50vh;
   height: 667px;
   background-image: url("../assets/bg-header.webp");
   background-size: cover;
   background-position: center;
-  // margin-bottom: 131px;
 }
 
-//  yellow-primary: #FFD15B
 
 .header--title {
   font-size: 44px;
@@ -56,7 +58,6 @@ header {
   }
   &--cancel {
     border: none;
-    // visibility: hidden;
   }
 }
 
@@ -67,6 +68,20 @@ header {
 .div-filter {
   height: 56px;
   border-radius: 11px;
+  position: relative;
+}
+
+.div-filter.dropdown-open {
+  border-radius: 11px 11px 0 0;
+  border-bottom: none;
+}
+
+.div-filter--content {
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: white;
 }
 
 .search-aside {
@@ -83,7 +98,7 @@ header {
 }
 
 .filter-header {
-  width: 13.5vw ;
+  width: 13.5vw;
   height: 6.5vh;
 }
 
@@ -92,12 +107,11 @@ header {
   font-weight: 600;
 }
 
-
 .search-input {
-  background-image: url("../assets/loupe-icon-grey.svg"),;
+  background-image: url("../assets/loupe-icon-grey.svg");
   background-repeat: no-repeat;
-  background-position:  right 10px center;
-  background-size:14.5px 14px;
+  background-position: right 10px center;
+  background-size: 14.5px 14px;
   padding-right: 36px;
   border: 1px solid $light-grey;
   width: 163px;
@@ -119,14 +133,11 @@ header {
   height: 37px;
   font-size: 14px;
   font-weight: 500;
-  // margin-bottom: 12px;
   cursor: pointer;
 }
 
 .list-item:hover {
   background-color: $yellow;
-  // outline: 3px solid $yellow;
-  // outline-offset: 2px;
 }
 
 .open {
@@ -145,7 +156,6 @@ header {
   font-weight: 400;
 }
 
-
 // DIV TAG
 
 .tag-list {
@@ -160,7 +170,7 @@ header {
 .tag {
   width: min-content;
   padding: 18px;
-  width: 13.5vw ;
+  width: 13.5vw;
   height: 6.5vh;
   border-radius: 11px;
   font-size: 14px;
@@ -174,6 +184,8 @@ header {
 }
 
 main {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   padding: 2vh 6vw 0 6vw;
@@ -193,38 +205,36 @@ main {
   height: 253px;
   object-fit: cover;
   border-radius: 21px 21px 0 0;
-
 }
 
-  .time-tag {
-    top: 2vh;
-    right: 1.5vw;
-    width: 4.5vw;
-    height: 3vh;
-    font-size: 12px;
-    font-weight: 400;
+.time-tag {
+  top: 2vh;
+  right: 1.5vw;
+  width: 4.5vw;
+  height: 3vh;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .recipe-container {
-
   &--title {
-  font-size: 18px;
-}
+    font-size: 18px;
+  }
   &---description {
-  width: 100%;
-  max-height: 80px;
-  white-space: normal;
-  overflow: auto;
-  scrollbar-width: none;
-  word-wrap: break-word;
-  font-size: 14px;
-}
-&--recette, &--ingredients {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
+    width: 100%;
+    max-height: 80px;
+    white-space: normal;
+    overflow: auto;
+    scrollbar-width: none;
+    word-wrap: break-word;
+    font-size: 14px;
+  }
+  &--recette,
+  &--ingredients {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
 }
 
 /* Chrome, Safari, Edge (Chromium) */
@@ -238,7 +248,7 @@ main {
   height: 11rem;
   list-style: none;
   display: grid;
-  grid-template-columns: 55% 45% ;
+  grid-template-columns: 55% 45%;
 
   &--item {
     font-weight: 500;
@@ -248,8 +258,5 @@ main {
   &--details {
     font-weight: 400;
     font-size: 14px;
-
   }
-
-
 }

@@ -9,7 +9,6 @@ export const countData = (data = getRecipes()) => {
   if (countText) {
     countText.textContent = `${dataLength} recettes`;
   }
-  console.log(dataLength);
 };
 
 export function normalize(s) {
