@@ -135,6 +135,8 @@ export class ButtonElement {
     this.el.textContent = options.textContent;
     if (options.ariaLabel)
       this.el.setAttribute("aria-label", options.ariaLabel);
+        if (options.type)
+      this.el.setAttribute("type", options.type);
     if (options.ariaHaspopup)
       this.el.setAttribute("aria-haspopup", options.ariaHaspopup);
     if (options.ariaExpanded)

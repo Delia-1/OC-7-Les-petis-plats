@@ -19,47 +19,90 @@ export const displayHeader = () => {
 };
 
 let isHeaderSearchBound = false;
-// OUI A TRANSFORMER
+let headerSearchData = null;
+let headerSearchIndex = null;
+
+export const getRightRecipesLaunched = (data, index, e) => {
+  if (e && typeof e.preventDefault === "function") e.preventDefault();
+
+  const inputUser = document.querySelector(".search-bar--input").value;
+
+  if (inputUser.length < 3 && inputUser.length !== 0) return;
+
+  const rightIndex = index && index.text ? index.text : {};
+  const normalizedInput = normalize(inputUser);
+  let allIds = new Set();
+
+  for (const word in rightIndex) {
+    if (!Object.prototype.hasOwnProperty.call(rightIndex, word)) continue;
+    if (word.startsWith(normalizedInput)) {
+      const ids = rightIndex[word];
+      for (let k = 0; k < ids.length; k++) allIds.add(ids[k]);
+    }
+  }
+
+  updateSearch(allIds, data, index);
+};
+
 export const getRightRecipes = (data, index) => {
   if (isHeaderSearchBound) return;
   isHeaderSearchBound = true;
 
+  headerSearchData = data;
+  headerSearchIndex = index;
+
   const searchBtn = document.querySelector(".search-bar--btn");
-
-  searchBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    getRightRecipesLaunched();
+  const inputUser = document.querySelector(".search-bar--input");
+  console.log(inputUser.value);
+  inputUser.addEventListener("input", () => {
+    if (inputUser.value.length < 3) return;
+    getRightRecipesLaunched(data, index);
   });
-  searchBtn.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+
+  // clic sur bouton de recherche -> lancer même si <3 (ou forcer comportement)
+  if (searchBtn) {
+    // éviter comportement submit si bouton dans un form
+    searchBtn.type = searchBtn.type || "button";
+    searchBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      getRightRecipesLaunched();
-    }
+      getRightRecipesLaunched(data, index, e);
+    });
+
+    // support Enter sur le bouton
+    searchBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        getRightRecipesLaunched(data, index, e);
+      }
+    });
+  }
+};
+
+export const handleSearchInput = () => {
+  const cancelBtn = document.querySelector(".search-bar--cancel");
+  const inputEl = document.querySelector(".search-bar--input");
+
+  if (!cancelBtn || !inputEl) return;
+
+  inputEl.addEventListener("input", () => {
+    cancelBtn.classList.toggle("d-none", inputEl.value.trim() === "");
   });
 
-  const getRightRecipesLaunched = () => {
-    const inputUser = document.querySelector(".search-bar--input").value;
-    if (inputUser.length < 3) return [];
+  if (!cancelBtn.dataset.bound) {
+    cancelBtn.dataset.bound = "1";
+    cancelBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      inputEl.value = "";
 
-    const rightIndex = index.text;
-    const normalizedInput = normalize(inputUser);
-    const allIds = new Set();
-    const keys = Object.keys(rightIndex);
+      inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+      cancelBtn.classList.add("d-none");
+      inputEl.focus();
 
-    for (let i = 0; i < keys.length; i++) {
-      const word = keys[i];
-      if (word.startsWith(normalizedInput)) {
-        const ids = rightIndex[word];
-        for (let j = 0; j < ids.length; j++) {
-          allIds.add(ids[j]);
-        }
+      if (headerSearchData && headerSearchIndex) {
+        getRightRecipesLaunched(headerSearchData, headerSearchIndex, e);
       }
-    }
-    const uniq = [...allIds];
-    console.log("uniq", uniq);
-
-    updateSearch(uniq, data, index);
-  };
+    });
+  }
 };
 
 export const updateSearch = (uniq, data, index) => {
@@ -147,6 +190,7 @@ export const headerTemplate = () => {
   const searchBarBtn = ElementFactory.create("button", {
     className: "search-bar--btn bg-dark",
     ariaLabel: "Rechercher",
+    type: "button",
   });
 
   const loupeIcon = ElementFactory.create("img", {
@@ -157,6 +201,7 @@ export const headerTemplate = () => {
   const searchBarCancel = ElementFactory.create("button", {
     className: "search-bar--cancel bg-light",
     ariaLabel: "Supprimer recherche",
+    type: "button",
   });
 
   const crossIcon = ElementFactory.create("img", {
