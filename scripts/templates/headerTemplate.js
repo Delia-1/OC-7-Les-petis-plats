@@ -9,7 +9,7 @@ import {
   bindTagBar,
   openFilter,
   setTagBaseline,
-  activeTags
+  activeTags,
 } from "./filterTemplate.js";
 
 export const displayHeader = () => {
@@ -18,86 +18,84 @@ export const displayHeader = () => {
   return header;
 };
 
-
-
-
 let isHeaderSearchBound = false;
-// OUI A TRANSFORMER
+let headerSearchData = null;
+let headerSearchIndex = null;
+
+export const getRightRecipesLaunched = (data, index, e) => {
+  if (e && typeof e.preventDefault === "function") e.preventDefault();
+
+  const inputUser = document.querySelector(".search-bar--input").value;
+
+  if (inputUser.length < 3 && inputUser.length !== 0) return;
+
+  const rightIndex = index.text;
+  const normalizedInput = normalize(inputUser);
+  let allIds = new Set();
+
+  Object.keys(rightIndex)
+    .filter((word) => word.startsWith(normalizedInput))
+    .forEach((word) => {
+      rightIndex[word].forEach((id) => allIds.add(id));
+    });
+
+  console.log("allIds", allIds);
+
+  updateSearch(allIds, data, index);
+};
+
 export const getRightRecipes = (data, index) => {
   if (isHeaderSearchBound) return;
   isHeaderSearchBound = true;
 
+  headerSearchData = data;
+  headerSearchIndex = index;
+
   const searchBtn = document.querySelector(".search-bar--btn");
+  const inputUser = document.querySelector(".search-bar--input");
+  console.log(inputUser.value);
 
-  searchBtn.addEventListener("click", (e) => {
- e.preventDefault();
-    getRightRecipesLaunched(e)
+  inputUser.addEventListener("input", (e) => {
+    if (inputUser.value.length < 3) return;
+
+    getRightRecipesLaunched(data, index, e);
   });
-    searchBtn.addEventListener("keydown", (e) => {
-      if(e.key === "Enter") {
- e.preventDefault();
-      getRightRecipesLaunched(e)
-      }
-  });
-
-
-  const getRightRecipesLaunched = (e) => {
-    if (e && typeof e.preventDefault === "function") e.preventDefault();
-      console.log("j'arriva cic")
-      const inputUser = document.querySelector(".search-bar--input").value;
-      if (inputUser.length < 3) return;
-
-      const rightIndex = index.text;
-      const normalizedInput = normalize(inputUser);
-      let allIds = new Set();
-      // AREMP-forEach
-  Object.keys(rightIndex)
-    .filter(word => word.startsWith(normalizedInput)) // <-- return fixed
-    .forEach(word => {
-      rightIndex[word].forEach(id => allIds.add(id));
-    });
-
-      // Object.entries(rightIndex).forEach(([word, ids]) => {
-      //   if (word.startsWith(normalizedInput)) allIds.push(...ids);
-      // });
-      // const uniq = [...new Set(allIds)];
-      console.log("allIds", allIds)
-
-      updateSearch(allIds, data, index);
+  searchBtn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      getRightRecipesLaunched(data, index, e);
     }
-
+  });
 };
-// ...existing code...
+
 export const handleSearchInput = () => {
   const cancelBtn = document.querySelector(".search-bar--cancel");
-  const inputEl = document.querySelector('.search-bar--input');
+  const inputEl = document.querySelector(".search-bar--input");
 
   if (!cancelBtn || !inputEl) return;
 
-  // afficher/masquer au chargement
-  cancelBtn.classList.toggle("d-none", inputEl.value.trim() === "");
-
-  // montrer/masquer au fur et à mesure de la saisie
   inputEl.addEventListener("input", () => {
     cancelBtn.classList.toggle("d-none", inputEl.value.trim() === "");
   });
 
-  // attacher le click une seule fois
   if (!cancelBtn.dataset.bound) {
     cancelBtn.dataset.bound = "1";
     cancelBtn.addEventListener("click", (e) => {
       e.preventDefault();
       inputEl.value = "";
-      // déclenche le handler "input" (mise à jour des filtres / UI)
+
       inputEl.dispatchEvent(new Event("input", { bubbles: true }));
       cancelBtn.classList.add("d-none");
       inputEl.focus();
+
+      if (headerSearchData && headerSearchIndex) {
+        getRightRecipesLaunched(headerSearchData, headerSearchIndex, e);
+      }
     });
   }
 };
 
 export const updateSearch = (uniq, data, index) => {
-  // AREMP filter
   const uniqIsSet = uniq instanceof Set;
   const filteredData = data.filter((recipe) =>
     uniqIsSet ? uniq.has(recipe.id) : uniq.includes(recipe.id)
@@ -106,12 +104,12 @@ export const updateSearch = (uniq, data, index) => {
   filtersUpdate(filteredData);
 
   const oldAside = document.querySelector(".search-aside");
-  const tagList = document.querySelector(".tag-list")
+  const tagList = document.querySelector(".tag-list");
   const parent = oldAside?.parentElement;
 
-   if (oldAside) oldAside.remove();
- const newAside = displayAside();
-   if (parent) {
+  if (oldAside) oldAside.remove();
+  const newAside = displayAside();
+  if (parent) {
     if (tagList && tagList.parentElement === parent) {
       parent.insertBefore(newAside, tagList);
     } else {
@@ -119,23 +117,25 @@ export const updateSearch = (uniq, data, index) => {
     }
   }
 
-  openFilter()
+  openFilter();
   setupIngredientFilter();
   selectAndUpdate(filteredData, index);
-  bindTagBar( index);
+  bindTagBar(index);
 
   let main = document.querySelector("main");
-   if (!main) { main = document.createElement("main"); document.body.appendChild(main); }
+  if (!main) {
+    main = document.createElement("main");
+    document.body.appendChild(main);
+  }
   main.innerHTML = "";
 
   main.appendChild(displayMain(filteredData));
 
+  countData(filteredData);
 
-  countData(filteredData)
-
-   if (activeTags.size === 0) {
-   setTagBaseline(filteredData);
- }
+  if (activeTags.size === 0) {
+    setTagBaseline(filteredData);
+  }
 };
 
 export const headerTemplate = () => {
@@ -177,7 +177,7 @@ export const headerTemplate = () => {
   const searchBarBtn = ElementFactory.create("button", {
     className: "search-bar--btn bg-dark",
     ariaLabel: "Rechercher",
-    type: "button"
+    type: "button",
   });
 
   const loupeIcon = ElementFactory.create("img", {
