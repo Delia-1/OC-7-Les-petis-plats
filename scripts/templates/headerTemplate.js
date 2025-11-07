@@ -32,16 +32,29 @@ export const getRightRecipesLaunched = (data, index, e) => {
   const rightIndex = index && index.text ? index.text : {};
   const normalizedInput = normalize(inputUser);
   let allIds = new Set();
+  const keys = Object.keys(rightIndex)
 
-  for (const word in rightIndex) {
-    if (!Object.prototype.hasOwnProperty.call(rightIndex, word)) continue;
+  for (let i = 0; i < keys.length; i++) {
+    const word = keys[i];
     if (word.startsWith(normalizedInput)) {
       const ids = rightIndex[word];
-      for (let k = 0; k < ids.length; k++) allIds.add(ids[k]);
+      for (let j = 0; j < ids.length; j++) {
+        allIds.add(ids[j]);
+    }
     }
   }
+  const uniq = [...allIds];
 
-  updateSearch(allIds, data, index);
+
+  // for (const word in rightIndex) {
+  //   if (!Object.prototype.hasOwnProperty.call(rightIndex, word)) continue;
+  //   if (word.startsWith(normalizedInput)) {
+  //     const ids = rightIndex[word];
+  //     for (let k = 0; k < ids.length; k++) allIds.add(ids[k]);
+  //   }
+  // }
+
+  updateSearch(uniq, data, index);
 };
 
 export const getRightRecipes = (data, index) => {
