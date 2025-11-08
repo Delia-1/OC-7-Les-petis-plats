@@ -12,6 +12,18 @@ export const displayMain = (data) => {
   return main;
 };
 
+export const displayErrorMessage = (inputUser) => {
+  const errorWrapper = ElementFactory.create("div", {
+    className: "error-wrapper",
+  });
+  const errorMessage = ElementFactory.create("h4", {
+    className: "error-message",
+    text: `Aucune recette ne contient « ${inputUser} » vous pouvez chercher « tarte aux pommes », « poisson »`,
+  });
+  errorWrapper.el.appendChild(errorMessage.el);
+  return errorWrapper.el;
+};
+
 export const ingredientsTemplate = (recipe) => {
   return recipe.ingredients.map((currentIngredient) => {
     const { ingredient, quantity, unit } = currentIngredient;

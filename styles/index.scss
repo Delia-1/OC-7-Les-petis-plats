@@ -62,6 +62,10 @@ header {
 
 .search-aside {
   padding: 2.5vh 7vw;
+
+  @media (max-width: 700px) {
+    margin-top: 5vh;
+  }
 }
 
 .div-filter {
@@ -117,7 +121,7 @@ header {
   background-size: 14.5px 14px;
   padding-right: 36px;
   border: 1px solid $light-grey;
-  width: 163px;
+  width: 90%;
   height: 36px;
   border-radius: 2px;
 }
@@ -152,6 +156,11 @@ header {
   right: 100px;
   align-self: center;
   top: 5vh;
+
+  @media (max-width: 700px) {
+    top: -2vh;
+    left: 50px;
+  }
 }
 
 .count-text {
@@ -164,6 +173,7 @@ header {
 .tag-list {
   list-style: none;
   padding-left: 7vw;
+  height: 57px;
 }
 
 .close-img {
@@ -191,14 +201,27 @@ main {
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: 2vh 6vw 0 6vw;
+  padding: 0 6vw 0 6vw;
   grid-gap: 7vh 1vw;
   place-items: center;
+
 
   @media (max-width: 1000px) {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+main:has(.error-message) {
+  display: flex;
+  min-height: 400px;
+  align-items: flex-start;
+}
+
+.error-message {
+  font-size: 24px;
+
+}
+
 
 .recipe-card {
   width: 26.5vw;
@@ -225,7 +248,7 @@ main {
 .time-tag {
   top: 2vh;
   right: 1.5vw;
-  width: 4.5vw;
+  width: 17%;
   height: 3vh;
   font-size: 12px;
   font-weight: 400;

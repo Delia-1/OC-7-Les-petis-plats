@@ -11,6 +11,7 @@ import {
   setTagBaseline,
   activeTags,
 } from "./filterTemplate.js";
+import {displayErrorMessage} from "./cardsTemplate.js"
 
 export const displayHeader = () => {
   const header = headerTemplate();
@@ -39,10 +40,12 @@ export const getRightRecipesLaunched = (data, index, e) => {
       rightIndex[word].forEach((id) => allIds.add(id));
     });
 
-  updateSearch(allIds, data, index);
+    updateSearch(allIds, data, index, inputUser);
+
 };
 
 export const getRightRecipes = (data, index) => {
+
   if (isHeaderSearchBound) return;
   isHeaderSearchBound = true;
 
@@ -64,6 +67,8 @@ export const getRightRecipes = (data, index) => {
     }
   });
 };
+
+
 
 export const handleSearchInput = () => {
   const cancelBtn = document.querySelector(".search-bar--cancel");
@@ -92,7 +97,7 @@ export const handleSearchInput = () => {
   }
 };
 
-export const updateSearch = (uniq, data, index) => {
+export const updateSearch = (uniq, data, index, inputUser) => {
   const uniqIsSet = uniq instanceof Set;
   const filteredData = data.filter((recipe) =>
     uniqIsSet ? uniq.has(recipe.id) : uniq.includes(recipe.id)
@@ -124,15 +129,18 @@ export const updateSearch = (uniq, data, index) => {
     main = document.createElement("main");
     document.body.appendChild(main);
   }
-  main.innerHTML = "";
-
-  main.appendChild(displayMain(filteredData));
+const newMain = displayMain(filteredData);
+main.parentNode.replaceChild(newMain, main)
 
   countData(filteredData);
 
   if (activeTags.size === 0) {
     setTagBaseline(filteredData);
   }
+
+        if (filteredData.length === 0) {
+            newMain.appendChild(displayErrorMessage(inputUser));
+    }
 };
 
 export const headerTemplate = () => {

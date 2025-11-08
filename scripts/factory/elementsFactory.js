@@ -34,6 +34,7 @@ export class ElementFactory {
       case "h1":
       case "h2":
       case "h3":
+      case "h4":
         return new HeadingElement(elementType, options);
       case "textarea":
         return new TextareaElement(options);
