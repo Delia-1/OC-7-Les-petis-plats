@@ -81,4 +81,14 @@ export function getRecipeIdsFromKeywords(keywords, dict) {
   return lists.reduce((acc, ids) => acc.filter((id) => ids.includes(id)));
 }
 
+export const saveIndexToCache = (index) => {
+  localStorage.setItem("recipeIndex", JSON.stringify(index));
+}
+
+export const loadIndexFromCache = () => {
+  const data = localStorage.getItem("recipeIndex");
+  return data ? JSON.parse(data) : null;
+}
+
+
 export default getRecipes;

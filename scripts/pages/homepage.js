@@ -1,4 +1,4 @@
-import { getRecipes, indexData, countData } from "../utils/getRecipies.js";
+import { getRecipes, indexData, countData, saveIndexToCache, loadIndexFromCache } from "../utils/getRecipies.js";
 import { displayMain } from "../templates/cardsTemplate.js";
 import {
   displayAside,
@@ -16,8 +16,13 @@ import {
 import { getRightRecipes } from "../templates/headerTemplate.js";
 
 const recipeData = getRecipes();
+let index = loadIndexFromCache()
+
+if (!index) {
+  index = indexData();
+  saveIndexToCache(index)
+}
 const body = document.querySelector("body");
-const index = indexData();
 body.appendChild(displayHeader());
 handleSearchInput();
 
