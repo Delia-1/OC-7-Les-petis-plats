@@ -35,10 +35,10 @@ $theme-colors: map-merge(
 
 // 5) Layout (optionnel)
 @import "bootstrap/scss/containers";
-@import "bootstrap/scss/grid";
+// @import "bootstrap/scss/grid";
 
 // 6) Helpers utiles
-@import "bootstrap/scss/helpers"; // ex. .visually-hidden
+// @import "bootstrap/scss/helpers"; // ex. .visually-hidden
 
 @import "bootstrap/scss/utilities";
 
