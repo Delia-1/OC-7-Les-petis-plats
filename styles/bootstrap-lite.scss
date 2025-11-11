@@ -6,12 +6,6 @@ $light-grey: #ededed;
 $grey: #7a7a7a;
 $white: #ffffff;
 
-// 2) Tes overrides AVANT (couleurs, radius, breakpoints…)
-$body-font-family: system-ui, -apple-system, "Segoe UI", Roboto,
-  "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
-  "Segoe UI Symbol" !default;
-// (ajoute ici seulement ce que tu veux modifier)
-
 @font-face {
   font-family: 'Anton';
   src: url('../assets/fonts/Anton-Regular.ttf') format('truetype');
@@ -33,7 +27,6 @@ $body-font-family: system-ui, -apple-system, "Segoe UI", Roboto,
   font-style: normal;
 }
 
-// 3) Suite des prereqs
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
 @import "bootstrap/scss/maps";
@@ -50,20 +43,10 @@ $theme-colors: map-merge(
   )
 );
 
-// 4) Core minimal
 @import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
-
-// 5) Layout (optionnel)
-// @import "bootstrap/scss/containers";
-// @import "bootstrap/scss/grid";
-
-// 6) Helpers utiles
-// @import "bootstrap/scss/helpers"; // ex. .visually-hidden
-
 @import "bootstrap/scss/utilities";
 
-/* (Optionnel) Garantir les utilitaires text/bg basés sur $theme-colors */
 $utilities: map-merge(
   $utilities,
   (
@@ -80,7 +63,6 @@ $utilities: map-merge(
   )
 );
 
-// 7) Utilities API (génère SEULEMENT ce que tu actives)
 @import "bootstrap/scss/utilities/api";
 
 @import "index.scss";
