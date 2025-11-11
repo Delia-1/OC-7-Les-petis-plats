@@ -78,7 +78,7 @@ export const displayAside = () => {
   filtersObj.forEach((item) => {
     const currentNode = filterSectionTemplate(item);
     const filterName = currentNode.querySelector(".filterName");
-    const searchInput = currentNode.querySelector(".search-input")
+    const searchInput = currentNode.querySelector(".search-input");
     currentNode.dataset.key = item.id;
     filterName.textContent = item.id;
     searchInput.id = item.id;
@@ -136,17 +136,17 @@ export const setupIngredientFilter = (data, index) => {
   inputIngredient.forEach((input) => {
     if (input.dataset.bound === "1") return;
     input.dataset.bound = "1";
-       const root = input.closest(".div-filter");
-   if (!input || !root) return;
-   const list = root.querySelector(".item-list");
-   if (!list) return;
+    const root = input.closest(".div-filter");
+    if (!input || !root) return;
+    const list = root.querySelector(".item-list");
+    if (!list) return;
 
-       const items = list.querySelectorAll("li");
+    const items = list.querySelectorAll("li");
     const fullList = [];
     items.forEach((item) => fullList.push(item.innerHTML));
     root._fullList = fullList.slice();
 
-      const cutInputEl = root.querySelector(".cut-input");
+    const cutInputEl = root.querySelector(".cut-input");
     if (cutInputEl && !cutInputEl.dataset.bound) {
       cutInputEl.dataset.bound = "1";
       cutInputEl.addEventListener("click", (e) => {
@@ -157,8 +157,8 @@ export const setupIngredientFilter = (data, index) => {
       });
     }
 
-    input.addEventListener("input", (e) => {
-      handleFilterInput(input)
+    input.addEventListener("input", () => {
+      handleFilterInput(input);
       const source = root._fullList || fullList;
       const newFilteredList = source.filter((item) =>
         normalize(item).includes(normalize(input.value))
@@ -177,7 +177,9 @@ export const setupIngredientFilter = (data, index) => {
 export const handleFilterInput = (input) => {
   if (!input || !(input instanceof HTMLElement)) return;
   const wrapper = input.closest(".search-input-wrapper");
-  const cut = wrapper ? wrapper.querySelector(".cut-input") : input.parentElement?.querySelector(".cut-input");
+  const cut = wrapper
+    ? wrapper.querySelector(".cut-input")
+    : input.parentElement?.querySelector(".cut-input");
   const hasValue = input.value && input.value.trim().length > 0;
 
   if (cut) {
@@ -273,7 +275,8 @@ export const filterSectionTemplate = () => {
   });
 
   const divFilterHeader = ElementFactory.create("div", {
-    className: "filter-header d-flex justify-content-center align-items-center pt-2",
+    className:
+      "filter-header d-flex justify-content-between align-items-center p-3",
   });
 
   const filterName = ElementFactory.create("p", {
@@ -281,7 +284,7 @@ export const filterSectionTemplate = () => {
   });
 
   const dropdownnIcon = ElementFactory.create("img", {
-    className: "dropdown-icon ms-5 ps-3",
+    className: "dropdown-icon",
     src: "assets/dropdown-close.svg",
     alt: "dropdown icon",
   });
@@ -292,8 +295,9 @@ export const filterSectionTemplate = () => {
   const listContainer = ElementFactory.create("div", {
     className: "list-container mb-1 ",
   });
-    const searchWrapper = ElementFactory.create("div", {
-    className: "search-input-wrapper  d-flex position-relative justify-content-center align-items-stretch",
+  const searchWrapper = ElementFactory.create("div", {
+    className:
+      "search-input-wrapper  d-flex position-relative justify-content-center align-items-stretch",
   });
 
   const searchInput = ElementFactory.create("input", {
@@ -301,7 +305,7 @@ export const filterSectionTemplate = () => {
     ariaAutoComplete: "list",
   });
 
-    const cutInput = ElementFactory.create("img", {
+  const cutInput = ElementFactory.create("img", {
     className: "cut-input position-absolute text-grey d-none",
     src: "assets/cross-icon.svg",
     alt: "supprimer l'entrée",

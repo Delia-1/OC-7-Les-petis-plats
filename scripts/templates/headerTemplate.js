@@ -11,6 +11,7 @@ import {
   setTagBaseline,
   activeTags,
 } from "./filterTemplate.js";
+import { displayErrorMessage } from "./cardsTemplate.js";
 
 export const displayHeader = () => {
   const header = headerTemplate();
@@ -32,7 +33,7 @@ export const getRightRecipesLaunched = (data, index, e) => {
   const rightIndex = index && index.text ? index.text : {};
   const normalizedInput = normalize(inputUser);
   let allIds = new Set();
-  const keys = Object.keys(rightIndex)
+  const keys = Object.keys(rightIndex);
 
   for (let i = 0; i < keys.length; i++) {
     const word = keys[i];
@@ -40,7 +41,7 @@ export const getRightRecipesLaunched = (data, index, e) => {
       const ids = rightIndex[word];
       for (let j = 0; j < ids.length; j++) {
         allIds.add(ids[j]);
-    }
+      }
     }
   }
   const uniq = [...allIds];
@@ -58,7 +59,7 @@ export const getRightRecipes = (data, index) => {
   const searchBtn = document.querySelector(".search-bar--btn");
   const inputUser = document.querySelector(".search-bar--input");
 
-  inputUser.addEventListener("input", (e) => {
+  inputUser.addEventListener("input", () => {
     if (inputUser.value.length < 3) return;
     getRightRecipesLaunched(data, index);
   });
@@ -107,7 +108,6 @@ export const handleSearchInput = () => {
 };
 
 export const updateSearch = (uniq, data, index) => {
-
   const uniqSet = new Set(uniq);
   const filteredData = [];
   for (const recipe of data) {
@@ -140,14 +140,18 @@ export const updateSearch = (uniq, data, index) => {
     main = document.createElement("main");
     document.body.appendChild(main);
   }
-  main.innerHTML = "";
-
-  main.appendChild(displayMain(filteredData));
+  const newMain = displayMain(filteredData);
+  main.parentNode.replaceChild(newMain, main);
 
   countData(filteredData);
 
   if (activeTags.size === 0) {
     setTagBaseline(filteredData);
+  }
+
+  if (filteredData.length === 0) {
+    const inputUser = document.querySelector(".search-bar--input").value;
+    newMain.appendChild(displayErrorMessage(inputUser));
   }
 };
 

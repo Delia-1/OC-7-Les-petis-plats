@@ -1,16 +1,32 @@
 @import "bootstrap/scss/functions";
 
-$yellow: #FFD15B;
-$dark: #1B1B1B;
-$light-grey: #EDEDED;
-$grey: #7A7A7A;
+$yellow: #ffd15b;
+$dark: #1b1b1b;
+$light-grey: #ededed;
+$grey: #7a7a7a;
 $white: #ffffff;
 
-// 2) Tes overrides AVANT (couleurs, radius, breakpoints…)
-$body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-// (ajoute ici seulement ce que tu veux modifier)
+@font-face {
+  font-family: 'Anton';
+  src: url('../assets/fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-// 3) Suite des prereqs
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
 @import "bootstrap/scss/maps";
@@ -23,31 +39,30 @@ $theme-colors: map-merge(
     "dark": $dark,
     "light-grey": $light-grey,
     "grey": $grey,
-    "white" : $white,
+    "white": $white,
   )
 );
 
-// 4) Core minimal
 @import "bootstrap/scss/root";
 @import "bootstrap/scss/reboot";
-
-// 5) Layout (optionnel)
-@import "bootstrap/scss/containers";
-@import "bootstrap/scss/grid";
-
-// 6) Helpers utiles
-@import "bootstrap/scss/helpers"; // ex. .visually-hidden
-
 @import "bootstrap/scss/utilities";
 
-/* (Optionnel) Garantir les utilitaires text/bg basés sur $theme-colors */
-$utilities: map-merge($utilities, (
-  "color": (property: color, class: text, values: $theme-colors),
-  "background-color": (property: background-color, class: bg, values: $theme-colors),
+$utilities: map-merge(
+  $utilities,
+  (
+    "color": (
+      property: color,
+      class: text,
+      values: $theme-colors,
+    ),
+    "background-color": (
+      property: background-color,
+      class: bg,
+      values: $theme-colors,
+    ),
+  )
+);
 
-));
-
-// 7) Utilities API (génère SEULEMENT ce que tu actives)
 @import "bootstrap/scss/utilities/api";
 
 @import "index.scss";

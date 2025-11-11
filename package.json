@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
     "css:build": "sass --load-path=node_modules styles/bootstrap-lite.scss public/bootstrap.css --style=compressed",
-    "css:watch": "sass --load-path=node_modules --watch styles/bootstrap-lite.scss public/bootstrap.css --style=compressed"
+    "css:watch": "sass --load-path=node_modules --watch styles/bootstrap-lite.scss public/bootstrap.css --style=compressed",
+    "build:js": "webpack",
+    "serve": "http-server . -p 5500 -c-1 --gzip"
   },
   "repository": {
     "type": "git",
@@ -15,13 +19,22 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Delia-1/OC-7-Les-petis-plats/issues"
   },
   "homepage": "https://github.com/Delia-1/OC-7-Les-petis-plats#readme",
   "devDependencies": {
     "bootstrap": "^5.3.8",
-    "sass": "^1.93.0"
+    "eslint": "^9.39.1",
+    "http-server": "^14.1.1",
+    "rollup": "^2.79.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.93.0",
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "terser": "^5.44.1"
   }
 }

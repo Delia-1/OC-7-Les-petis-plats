@@ -1,3 +1,5 @@
+import recipes from "../../data/recipes.js";
+
 export const getRecipes = () => {
   const data = recipes;
   return data;
@@ -22,18 +24,19 @@ export function normalize(s) {
 
 export const formatTokens = (t, textTokens) => {
   if (!t) return;
-  const cleaned = normalize(t.replace(/[.,;:!?()'’"«»\-]/g, " "));
-  const cleanedAndSplitted = cleaned.split(/\s+/)
+  const cleaned = normalize(t.replace(/[.,;:!?()'’"«»]/g, " "));
+  const cleanedAndSplitted = cleaned.split(/\s+/);
   const uniqTokens = new Set();
 
-    for (const word of cleanedAndSplitted) {
-      if (word.length >=3)
-        {uniqTokens.add(word)}
+  for (const word of cleanedAndSplitted) {
+    if (word.length >= 3) {
+      uniqTokens.add(word);
     }
-    for (const word of uniqTokens) {
-      textTokens.add(word)
-    }
-}
+  }
+  for (const word of uniqTokens) {
+    textTokens.add(word);
+  }
+};
 
 export const indexData = (data = getRecipes()) => {
   let index = {
@@ -42,20 +45,19 @@ export const indexData = (data = getRecipes()) => {
   };
 
   for (let i = 0; i < data.length; i++) {
-    const recipe = data[i]
-      let textTokens = new Set();
+    const recipe = data[i];
+    let textTokens = new Set();
 
-        formatTokens(recipe.description, textTokens)
-        formatTokens(recipe.name, textTokens)
+    formatTokens(recipe.description, textTokens);
+    formatTokens(recipe.name, textTokens);
 
-        for ( let j = 0; j < recipe.ingredients.length; j++) {
-          const part = recipe.ingredients[j]
-          formatTokens(part.ingredient, textTokens)
-            const fullIng = normalize(part.ingredient);
-        if (!index.filters[fullIng]) index.filters[fullIng] = [];
-        index.filters[fullIng].push(recipe.id);
-        }
-
+    for (let j = 0; j < recipe.ingredients.length; j++) {
+      const part = recipe.ingredients[j];
+      formatTokens(part.ingredient, textTokens);
+      const fullIng = normalize(part.ingredient);
+      if (!index.filters[fullIng]) index.filters[fullIng] = [];
+      index.filters[fullIng].push(recipe.id);
+    }
 
     if (recipe.appliance) {
       const appKey = normalize(recipe.appliance);
@@ -65,14 +67,14 @@ export const indexData = (data = getRecipes()) => {
 
     if (recipe.ustensils) {
       for (let k = 0; k < recipe.ustensils.length; k++) {
-        const ustKey = normalize(recipe.ustensils[k])
+        const ustKey = normalize(recipe.ustensils[k]);
         if (!index.filters[ustKey]) index.filters[ustKey] = [];
         index.filters[ustKey].push(recipe.id);
       }
     }
 
     for (const token of textTokens) {
-       if (!index.text[token]) index.text[token] = [];
+      if (!index.text[token]) index.text[token] = [];
       index.text[token].push(recipe.id);
     }
   }
@@ -88,5 +90,14 @@ export function getRecipeIdsFromKeywords(keywords, dict) {
   if (lists.length === 0) return [];
   return lists.reduce((acc, ids) => acc.filter((id) => ids.includes(id)));
 }
+
+export const saveIndexToCache = (index) => {
+  localStorage.setItem("recipeIndex", JSON.stringify(index));
+};
+
+export const loadIndexFromCache = () => {
+  const data = localStorage.getItem("recipeIndex");
+  return data ? JSON.parse(data) : null;
+};
 
 export default getRecipes;
