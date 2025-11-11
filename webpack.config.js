@@ -11,17 +11,6 @@ export default {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
-  module: {
-    rules: [
-      {
-        test: /\.(png|jpe?g|gif|svg|webp)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'assets/[name][ext]',
-        },
-      },
-    ],
-  },
   optimization: {
     minimize: true,
   },
