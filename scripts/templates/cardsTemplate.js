@@ -2,11 +2,22 @@ import { ElementFactory } from "../factory/elementsFactory.js";
 import { openFilter } from "./filterTemplate.js";
 
 export const displayMain = (data) => {
+  const cacheKey = "recipeCards";
   const main = document.createElement("main");
   main.classList.add("z-2");
-  data.forEach((recipe) => {
-    main.appendChild(cardTemplate(recipe));
-  });
+
+const cachedLength = localStorage.getItem(cacheKey + '_length');
+  const cachedHTML = localStorage.getItem(cacheKey + '_html');
+
+  if (cachedLength && parseInt(cachedHTML) === data.length && cachedHTML) {  // Vérifiez si les données ont changé
+    main.innerHTML = cachedHTML;  // Injectez le HTML mis en cache
+  } else {
+    data.forEach((recipe) => {
+      main.appendChild(cardTemplate(recipe));
+    });
+    localStorage.setItem(cacheKey + '_html', main.innerHTML);
+    localStorage.setItem(cacheKey + '_length', data.length.toString());
+  }
 
   openFilter();
   return main;
@@ -60,6 +71,7 @@ export const cardTemplate = (recipe) => {
     className: "recipe-image",
     src: `assets/recipesPics/${image}`,
     alt: `photo of ${name}`,
+    loading: "lazy",
   });
 
   const timeTag = ElementFactory.create("div", {

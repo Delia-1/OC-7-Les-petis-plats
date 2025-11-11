@@ -87,6 +87,7 @@ export class ImageElement {
     if (options.ariaHidden)
       this.el.setAttribute("aria-hidden", options.ariaHidden);
     if (options.name) this.el.setAttribute("name", options.name);
+    if (options.loading) this.el.setAttribute("loading", options.loading);
   }
 }
 

@@ -100,15 +100,20 @@ npm run css:watch
 Ouvre le fichier index.html dans ton navigateur.
 Aucune autre configuration n’est nécessaire.
 
+---
+
 ## 🌿 Branches
 
 **main**
 
 - version moderne ES6+, utilisant des itérations déclaratives (forEach, map, filter).
+
   **for-loop-branch**
 - version native, utilisant des boucles impératives (for, for...of).
 
 Les deux branches offrent les mêmes fonctionnalités fonctionnelles, mais diffèrent dans leurs implémentations algorithmiques.
+
+---
 
 ## 🧪 Méthodologie de test de performance
 
@@ -185,6 +190,20 @@ Cette combinaison d’approches permet :
 - une **meilleure lisibilité** et maintenabilité du code,
 - des **performances équilibrées** sur toutes les tailles de jeux de données,
 - une **expérience utilisateur fluide** même lors de recherches fréquentes ou sur de gros volumes.
+
+---
+
+## 🌱 Optimisations Green IT
+
+Dans une démarche d’éco-conception web, plusieurs optimisations ont été appliquées afin de réduire l’empreinte carbone du site et d’améliorer son **score EcoIndex** :
+
+- 🖼️ **Images optimisées** avec [imageoptimizer.co](https://imageoptimizer.co/) et chargement différé (`loading="lazy"`).
+- ⚙️ **Bundling & minification** du JavaScript via **Rollup/Webpack** → réduction de ~70 % du poids total et d’une dizaine de requêtes HTTP à une seule.
+- 💾 **Cache localStorage** pour les cartes et l’index inversé, réduisant les recalculs CPU à chaque rechargement.
+- 🎨 **CSS minifié** (Sass `--style=compressed`) et préchargement des ressources critiques (images, polices).
+- 🔤 **Polices locales** au lieu des CDN externes pour limiter les requêtes réseau.
+
+> 🌍 Ces optimisations améliorent les temps de chargement, réduisent la consommation énergétique et rendent l’application plus respectueuse de l’environnement.
 
 ---
 
