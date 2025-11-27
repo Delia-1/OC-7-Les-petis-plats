@@ -11,7 +11,7 @@ import {
   setTagBaseline,
   activeTags,
 } from "./filterTemplate.js";
-import {displayErrorMessage} from "./cardsTemplate.js"
+import { displayErrorMessage } from "./cardsTemplate.js";
 
 export const displayHeader = () => {
   const header = headerTemplate();
@@ -30,22 +30,26 @@ export const getRightRecipesLaunched = (data, index, e) => {
 
   if (inputUser.length < 3 && inputUser.length !== 0) return;
 
-  const rightIndex = index.text;
+  const rightIndex = index && index.text ? index.text : {};
   const normalizedInput = normalize(inputUser);
   let allIds = new Set();
+  const keys = Object.keys(rightIndex);
 
-  Object.keys(rightIndex)
-    .filter((word) => word.startsWith(normalizedInput))
-    .forEach((word) => {
-      rightIndex[word].forEach((id) => allIds.add(id));
-    });
+  for (let i = 0; i < keys.length; i++) {
+    const word = keys[i];
+    if (word.startsWith(normalizedInput)) {
+      const ids = rightIndex[word];
+      for (let j = 0; j < ids.length; j++) {
+        allIds.add(ids[j]);
+      }
+    }
+  }
+  const uniq = [...allIds];
 
-    updateSearch(allIds, data, index, inputUser);
-
+  updateSearch(uniq, data, index);
 };
 
 export const getRightRecipes = (data, index) => {
-
   if (isHeaderSearchBound) return;
   isHeaderSearchBound = true;
 
@@ -55,20 +59,26 @@ export const getRightRecipes = (data, index) => {
   const searchBtn = document.querySelector(".search-bar--btn");
   const inputUser = document.querySelector(".search-bar--input");
 
-  inputUser.addEventListener("input", (e) => {
+  inputUser.addEventListener("input", () => {
     if (inputUser.value.length < 3) return;
-
-    getRightRecipesLaunched(data, index, e);
+    getRightRecipesLaunched(data, index);
   });
-  searchBtn.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+
+  if (searchBtn) {
+    searchBtn.type = searchBtn.type || "button";
+    searchBtn.addEventListener("click", (e) => {
       e.preventDefault();
       getRightRecipesLaunched(data, index, e);
-    }
-  });
+    });
+
+    searchBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        getRightRecipesLaunched(data, index, e);
+      }
+    });
+  }
 };
-
-
 
 export const handleSearchInput = () => {
   const cancelBtn = document.querySelector(".search-bar--cancel");
@@ -97,11 +107,12 @@ export const handleSearchInput = () => {
   }
 };
 
-export const updateSearch = (uniq, data, index, inputUser) => {
-  const uniqIsSet = uniq instanceof Set;
-  const filteredData = data.filter((recipe) =>
-    uniqIsSet ? uniq.has(recipe.id) : uniq.includes(recipe.id)
-  );
+export const updateSearch = (uniq, data, index) => {
+  const uniqSet = new Set(uniq);
+  const filteredData = [];
+  for (const recipe of data) {
+    if (uniqSet.has(recipe.id)) filteredData.push(recipe);
+  }
 
   filtersUpdate(filteredData);
 
@@ -129,8 +140,8 @@ export const updateSearch = (uniq, data, index, inputUser) => {
     main = document.createElement("main");
     document.body.appendChild(main);
   }
-const newMain = displayMain(filteredData);
-main.parentNode.replaceChild(newMain, main)
+  const newMain = displayMain(filteredData);
+  main.parentNode.replaceChild(newMain, main);
 
   countData(filteredData);
 
@@ -138,9 +149,10 @@ main.parentNode.replaceChild(newMain, main)
     setTagBaseline(filteredData);
   }
 
-        if (filteredData.length === 0) {
-            newMain.appendChild(displayErrorMessage(inputUser));
-    }
+  if (filteredData.length === 0) {
+    const inputUser = document.querySelector(".search-bar--input").value;
+    newMain.appendChild(displayErrorMessage(inputUser));
+  }
 };
 
 export const headerTemplate = () => {
@@ -191,12 +203,13 @@ export const headerTemplate = () => {
   });
 
   const searchBarCancel = ElementFactory.create("button", {
-    className: "search-bar--cancel bg-light d-none",
+    className: "search-bar--cancel bg-light",
     ariaLabel: "Supprimer recherche",
+    type: "button",
   });
 
   const crossIcon = ElementFactory.create("img", {
-    className: "cross-icon ms-5 ps-3 ",
+    className: "dropdown-icon ms-5 ps-3",
     src: "assets/cross-icon.svg",
     alt: "icon fermer",
   });
